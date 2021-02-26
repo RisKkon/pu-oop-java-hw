@@ -69,7 +69,6 @@ public class Render extends JFrame implements MouseListener {
 
                 this.getGameBoard().executeMove(row, col);
                 this.repaint();
-                int helloGitHub = 1;
             }
 
         }
