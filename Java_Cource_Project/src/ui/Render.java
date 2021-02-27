@@ -12,12 +12,16 @@ public class Render extends JFrame implements MouseListener {
     private GameBoard gameBoard;
     private boolean gameSetupStage;
     private boolean isPieceSelected;
+    private boolean didMoveFail;
+    private boolean wasMoveSuccessful;
 
     public Render(GameBoard gameboard) {
 
         this.gameBoard = gameboard;
         this.gameSetupStage = false;
         this.isPieceSelected = false;
+        this.didMoveFail = false;
+        this.wasMoveSuccessful = false;
         this.setSize(900, 700);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -26,6 +30,15 @@ public class Render extends JFrame implements MouseListener {
 
 
     }
+
+    public boolean isWasMoveSuccessful() { return wasMoveSuccessful; }
+
+    public void setWasMoveSuccessful(boolean wasMoveSuccessful) { this.wasMoveSuccessful = wasMoveSuccessful; }
+
+    public boolean isDidMoveFail() { return didMoveFail; }
+
+    public void setDidMoveFail(boolean didMoveFail) { this.didMoveFail = didMoveFail; }
+
     public GameBoard getGameBoard() { return gameBoard; }
 
     public boolean isGameSetupStage() { return gameSetupStage; }
@@ -68,14 +81,14 @@ public class Render extends JFrame implements MouseListener {
             if(!this.getGameBoard().isThereAPieceHere(row, col)) {
 
                 this.getGameBoard().executeMove(row, col);
+                this.setPieceSelected(false);
+                this.setWasMoveSuccessful(true);
                 this.repaint();
             }
 
         }
 
-        if(this.isGameSetupStage() && !this.isPieceSelected()) {
-            this.getGameBoard().turnCounter++;
-            this.getGameBoard().setPlayerOnTurn(this.getGameBoard().switchPlayerOnTurn());
+        if(this.isGameSetupStage() && !this.isPieceSelected() && !this.isDidMoveFail() && !this.isWasMoveSuccessful()) {
 
             if(this.getGameBoard().isSelectedPieceValid(row,col,
                     this.getGameBoard().getPieceCollection())) {
@@ -89,12 +102,21 @@ public class Render extends JFrame implements MouseListener {
 
         if(!this.isGameSetupStage()) {
 
-            this.getGameBoard().setPlayerOnTurn(this.getGameBoard().switchPlayerOnTurn());
+
             this.getGameBoard().executeInitialPlacementOnBoard(row, col, this.getGameBoard().getPieceCollection());
             this.repaint();
+            this.getGameBoard().switchPlayerOnTurn();
             if(this.isGameSetupOver()) {
                 this.setGameSetupStage(true);
             }
+        }
+        if(this.isDidMoveFail()) {
+            this.setDidMoveFail(false);
+
+        }
+        if(this.isWasMoveSuccessful()) {
+            this.getGameBoard().switchPlayerOnTurn();
+            this.setWasMoveSuccessful(false);
         }
 
 

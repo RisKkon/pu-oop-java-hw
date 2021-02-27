@@ -32,6 +32,7 @@ public class GameBoard {
         this.fillUpTileCollection();
         this.fillUpPlayerPieceCollection(this.getPlayerA());
         this.fillUpPlayerPieceCollection(this.getPlayerB());
+        this.setPlayerOnTurn(this.getPlayerA());
 
     }
 
@@ -121,15 +122,13 @@ public class GameBoard {
         player.getPlayerPieceCollection().add(new Dwarf());
 
     }
-    public Player switchPlayerOnTurn() {
+    public void switchPlayerOnTurn() {
 
-        if(this.getTurnCounter() % 2 == 0) {
-
-            this.turnCounter++;
-            return this.getPlayerB();
+        if(this.getPlayerOnTurn().getPlayerId().equals("a")) {
+            this.setPlayerOnTurn(this.getPlayerB());
+        } else {
+            this.setPlayerOnTurn(this.getPlayerA());
         }
-        this.turnCounter++;
-        return this.getPlayerA();
     }
     public void executeInitialPlacementOnBoard(int row, int col, Piece[][] pieceCollection) {
 
@@ -158,7 +157,6 @@ public class GameBoard {
 
             this.setPlayerB(this.getPlayerB());
         }
-        this.setPlayerOnTurn(null);
     }
 
     private boolean isPlacementValid(int row, int col, Piece[][] pieceCollection) {
@@ -197,6 +195,7 @@ public class GameBoard {
             this.getSelectedPiece().setCol(newCol);
             this.getPieceCollection()[oldRow][oldCol] = null;
             this.setSelectedPiece(null);
+
 
         }
     }
