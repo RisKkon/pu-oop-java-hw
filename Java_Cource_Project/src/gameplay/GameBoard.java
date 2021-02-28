@@ -9,6 +9,9 @@ import tiles.BlackTile;
 import tiles.GreyTile;
 import tiles.RedTile;
 import tiles.Tile;
+import ui.Modal;
+
+import javax.swing.*;
 
 public class GameBoard {
 
@@ -170,16 +173,20 @@ public class GameBoard {
         }
     }
 
-    public boolean isSelectedPieceValid(int row, int col, Piece[][] pieceCollection) {
+    public boolean isSelectedPieceValid(int row, int col, Piece[][] pieceCollection, JFrame frame) {
+        try {
+            return pieceCollection[row][col].getPiecePlayerId()
+                    .equals(this.getPlayerOnTurn().getPlayerId());
+        }
+        catch (Exception e) {
 
-        return pieceCollection[row][col].getPiecePlayerId()
-                .equals(this.getPlayerOnTurn().getPlayerId());
+            Modal message = new Modal(frame, "Wrong piece", "Selected piece is not yours", 400, 100);
+            return false;
+        }
     }
 
     public boolean isThereAPieceHere(int row, int col) {
 
-
-        int i = 0;
         return this.getPieceCollection()[row][col] != null;
     }
 
@@ -198,5 +205,11 @@ public class GameBoard {
 
 
         }
+    }
+
+    public void executeAttack(int attackRow, int attackCol) {
+
+        int oldRow = this.getSelectedPiece().getRow();
+        int oldCol = this.getSelectedPiece().getCol();
     }
 }

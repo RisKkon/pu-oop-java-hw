@@ -84,20 +84,25 @@ public class Render extends JFrame implements MouseListener {
                 this.setPieceSelected(false);
                 this.setWasMoveSuccessful(true);
                 this.repaint();
+            } else {
+
+                if(!this.getGameBoard().getPieceCollection()[row][col].getPiecePlayerId().equals(
+                        this.getGameBoard().getPlayerOnTurn().getPlayerId())) {
+
+
+                }
             }
 
         }
 
         if(this.isGameSetupStage() && !this.isPieceSelected() && !this.isDidMoveFail() && !this.isWasMoveSuccessful()) {
 
-            if(this.getGameBoard().isSelectedPieceValid(row,col,
-                    this.getGameBoard().getPieceCollection())) {
+            if(this.getGameBoard().isSelectedPieceValid(row, col, this.getGameBoard().
+                    getPieceCollection(), this)) {
 
                 this.getGameBoard().setSelectedPiece(this.getGameBoard().getPieceCollection()[row][col]);
                 this.setPieceSelected(true);
             }
-
-
         }
 
         if(!this.isGameSetupStage()) {

@@ -33,4 +33,9 @@ public class Knight extends Piece{
         return (rowCoefficient == 1 && colCoefficient == 0) ||
                 (rowCoefficient == 0 && colCoefficient == 1);
     }
+
+    @Override
+    public boolean isAttackValid(int row, int col, Piece[][] pieceCollection) {
+        return false;
+    }
 }

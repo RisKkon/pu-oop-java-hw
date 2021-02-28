@@ -28,4 +28,6 @@ public abstract class Piece {
     public abstract void renderPiece(Graphics g);
 
     public abstract boolean isMoveInRange(int row, int col, Piece[][] pieceCollection);
+
+    public abstract boolean isAttackValid(int row, int col, Piece[][] pieceCollection);
 }

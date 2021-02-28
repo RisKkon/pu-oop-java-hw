@@ -21,7 +21,19 @@ public class Elf extends Piece  {
     }
 
     @Override
-    public boolean isMoveInRange(int row, int col, Piece[][] pieceCollection) {
+    public boolean isMoveInRange(int newRow, int newCol, Piece[][] pieceCollection) {
+
+        int rowCoefficient = Math.abs(newRow - this.getRow());
+        int colCoefficient = Math.abs(newCol - this.getCol());
+        boolean isMovingStraight = rowCoefficient <= 3 && colCoefficient == 0 ||
+                                    colCoefficient <= 3 && rowCoefficient == 0;
+        boolean isMovingGLike = rowCoefficient <= 2 && colCoefficient <= 1 ||
+                                    rowCoefficient <= 1 && colCoefficient <= 2;
+        return (isMovingStraight || isMovingGLike);
+    }
+
+    @Override
+    public boolean isAttackValid(int row, int col, Piece[][] pieceCollection) {
         return false;
     }
 }
