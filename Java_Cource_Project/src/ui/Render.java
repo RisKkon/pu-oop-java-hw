@@ -78,32 +78,15 @@ public class Render extends JFrame implements MouseListener {
 
         if(this.isSetupCompleteAndPieceSelected()) {
 
-            if(!this.isThereIsAPieceInBox(row, col)) {
-
-                this.executeMoveOnBoard(row, col);
-            }
-            if(this.isThereIsAPieceInBox(row, col)) {
-
-                if(this.doesPlayerWantToAttackEnemyPiece(row, col)) {
-
-                    this.executeAttackOnBoard(row, col);
-                }
-            }
+            this.moveExecutionStage(row, col);
         }
         if(this.isSetupCompleteAndPieceNotSelected()) {
 
-            if(this.getGameBoard().isSelectedPieceValid(row, col, this.getGameBoard().getPieceCollection(), this)) {
-                this.selectPiece(row, col);
-            }
+            this.pieceSelectionStage(row, col);
         }
-
-        if(!this.isGameSetupStageComplete()) {
-
-            this.gameSetupRound(row, col);
-        }
+        this.setupStage(row, col);
         this.checkIfMoveFailed();
         this.checkIfMoveWasSuccessful();
-
     }
 
     @Override
@@ -170,7 +153,12 @@ public class Render extends JFrame implements MouseListener {
 
         if (this.getGameBoard().getSelectedPiece().isAttackValid(row, col, this.getGameBoard().getPieceCollection())) {
             this.getGameBoard().executeAttack(row, col);
+            this.getGameBoard().removeDeadPieces();
+            this.getGameBoard().setSelectedPiece(null);
+            this.setPieceSelected(false);
+            this.setWasMoveSuccessful(true);
         }
+        this.repaint();
     }
 
     private void selectPiece(int row, int col) {
@@ -202,6 +190,36 @@ public class Render extends JFrame implements MouseListener {
         if(this.isWasMoveSuccessful()) {
             this.getGameBoard().switchPlayerOnTurn();
             this.setWasMoveSuccessful(false);
+        }
+    }
+
+    private void setupStage(int row, int col) {
+
+        if(!this.isGameSetupStageComplete()) {
+
+            this.gameSetupRound(row, col);
+        }
+    }
+
+    private void pieceSelectionStage(int row, int col) {
+
+        if(this.getGameBoard().isSelectedPieceValid(row, col, this.getGameBoard().getPieceCollection(), this)) {
+            this.selectPiece(row, col);
+        }
+    }
+
+    private void moveExecutionStage(int row, int col) {
+
+        if(!this.isThereIsAPieceInBox(row, col)) {
+
+            this.executeMoveOnBoard(row, col);
+        }
+        if(this.isThereIsAPieceInBox(row, col)) {
+
+            if(this.doesPlayerWantToAttackEnemyPiece(row, col)) {
+
+                this.executeAttackOnBoard(row, col);
+            }
         }
     }
 }

@@ -18,7 +18,12 @@ public class Dwarf extends  Piece{
 
         int tileX = this.getCol() * 100;
         int tileY = this.getRow() * 100;
-        g.setColor(Color.BLACK);
+        //g.setColor(Color.BLACK);
+        if(this.getPiecePlayerId().equals("a")) {
+            g.setColor(Color.BLACK);
+        } else {
+            g.setColor(Color.WHITE);
+        }
         g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         g.drawString("D", tileX + 40, tileY + 60);
     }

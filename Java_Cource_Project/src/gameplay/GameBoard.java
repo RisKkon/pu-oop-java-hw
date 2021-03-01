@@ -223,7 +223,24 @@ public class GameBoard {
             this.getPieceCollection()[oldRow][oldCol] = null;
         } else {
             int newPoints = this.getPieceCollection()[attackRow][attackCol].getAttackPoints() - damage;
-            this.getPieceCollection()[attackRow][attackCol].setAttackPoints(newPoints);
+            this.getPieceCollection()[attackRow][attackCol].setHealthPoints(newPoints);
+        }
+    }
+
+    public void removeDeadPieces() {
+
+        for (int i = 0; i < this.getPieceCollection().length; i++) {
+            for (int j = 0; j < this.getPieceCollection()[i].length; j++) {
+
+                if(this.getPieceCollection()[i][j] != null) {
+
+                    int healthPoints = this.getPieceCollection()[i][j].getHealthPoints();
+
+                    if(healthPoints <= 0) {
+                        this.getPieceCollection()[i][j] = null;
+                    }
+                }
+            }
         }
     }
 }
