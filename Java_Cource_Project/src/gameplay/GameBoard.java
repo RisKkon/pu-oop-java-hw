@@ -136,8 +136,8 @@ public class GameBoard {
     public void executeInitialPlacementOnBoard(int row, int col, Piece[][] pieceCollection) {
 
         if(this.isPlacementValid(row, col, pieceCollection)) {
-            int randomNum = (int) (Math.random() *
-                    this.getPlayerOnTurn().getPlayerPieceCollection().size());
+            int randomNum = this.trowDice(0, this.getPlayerOnTurn().getPlayerPieceCollection().size());
+
             Piece pieceToPlace = this.getPlayerOnTurn().getPlayerPieceCollection().get(randomNum);
             pieceCollection[row][col] = pieceToPlace;
             pieceToPlace.setRow(row);
@@ -222,9 +222,16 @@ public class GameBoard {
             this.getSelectedPiece().setCol(attackCol);
             this.getPieceCollection()[oldRow][oldCol] = null;
         } else {
-            int newPoints = this.getPieceCollection()[attackRow][attackCol].getAttackPoints() - damage;
+            int newPoints = this.getPieceCollection()[attackRow][attackCol].getHealthPoints() - damage;
             this.getPieceCollection()[attackRow][attackCol].setHealthPoints(newPoints);
         }
+    }
+
+    public void executeHeal(int row, int col) {
+
+        int healthToGive = this.trowDice(1, 6);
+        int newHealth = this.getPieceCollection()[row][col].getHealthPoints() + healthToGive;
+        this.getPieceCollection()[row][col].setHealthPoints(newHealth);
     }
 
     public void removeDeadPieces() {
@@ -242,5 +249,10 @@ public class GameBoard {
                 }
             }
         }
+    }
+
+    public int trowDice(int min, int max) {
+
+        return (int) (Math.random() * max) + min;
     }
 }

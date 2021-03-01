@@ -131,6 +131,13 @@ public class Render extends JFrame implements MouseListener {
                 this.getGameBoard().getPlayerOnTurn().getPlayerId());
     }
 
+    private boolean doesPlayerWantToHealAPiece(int row, int col) {
+
+        return this.getGameBoard().getSelectedPiece().getRow() == row &&
+                this.getGameBoard().getSelectedPiece().getCol() == col;
+
+    }
+
     private boolean isThereIsAPieceInBox(int row, int col) {
 
         return this.getGameBoard().isThereAPieceHere(row, col);
@@ -159,6 +166,15 @@ public class Render extends JFrame implements MouseListener {
             this.setWasMoveSuccessful(true);
         }
         this.repaint();
+    }
+
+    private void executeHealOnBoard(int row, int col) {
+
+        this.getGameBoard().executeHeal(row, col);
+        int diceNum = this.getGameBoard().trowDice(1, 100);
+        if(diceNum % 2 == 0) {
+            this.getGameBoard().switchPlayerOnTurn();
+        }
     }
 
     private void selectPiece(int row, int col) {
@@ -219,6 +235,13 @@ public class Render extends JFrame implements MouseListener {
             if(this.doesPlayerWantToAttackEnemyPiece(row, col)) {
 
                 this.executeAttackOnBoard(row, col);
+            } else {
+                if (this.doesPlayerWantToHealAPiece(row, col)) {
+                    this.executeHealOnBoard(row, col);
+                } else {
+
+                    new Modal(this, "Invalid heal", "Invalid healing attempt, try again",400, 100 );
+                }
             }
         }
     }
