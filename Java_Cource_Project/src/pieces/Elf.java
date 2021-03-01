@@ -1,5 +1,7 @@
 package pieces;
 
+import tiles.Tile;
+
 import java.awt.*;
 
 public class Elf extends Piece  {
@@ -55,4 +57,5 @@ public class Elf extends Piece  {
                 rowCoefficient == 1 && colCoefficient == 2;
         return (isAttackingStraight || isAttackingGLike);
     }
+
 }

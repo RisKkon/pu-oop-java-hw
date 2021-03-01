@@ -1,5 +1,7 @@
 package pieces;
 
+import tiles.Tile;
+
 import java.awt.*;
 
 public class Dwarf extends  Piece{

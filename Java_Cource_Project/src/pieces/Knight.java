@@ -1,6 +1,6 @@
 package pieces;
 
-import gameplay.GameBoard;
+import tiles.Tile;
 
 import java.awt.*;
 
@@ -53,4 +53,5 @@ public class Knight extends Piece{
         return (rowCoefficient == 1 && colCoefficient == 0) ||
                 (rowCoefficient == 0 && colCoefficient == 1);
     }
+
 }

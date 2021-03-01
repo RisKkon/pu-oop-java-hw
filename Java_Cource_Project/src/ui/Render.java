@@ -1,6 +1,8 @@
 package ui;
 
 import gameplay.GameBoard;
+import gameplay.Player;
+import pieces.Piece;
 
 import javax.swing.*;
 import java.awt.*;
@@ -88,6 +90,7 @@ public class Render extends JFrame implements MouseListener {
         this.setupStage(row, col);
         this.checkIfMoveFailed();
         this.checkIfMoveWasSuccessful();
+        this.printInfoToConsole();
     }
 
     @Override
@@ -182,16 +185,23 @@ public class Render extends JFrame implements MouseListener {
     private void selectPiece(int row, int col) {
 
         this.getGameBoard().setSelectedPiece(this.getGameBoard().getPieceCollection()[row][col]);
+        this.getGameBoard().getSelectedPiece().showAvailableMoves(
+                                        this.getGameBoard().getPieceCollection(),
+                                         this.getGameBoard().getTileCollection());
+        this.getGameBoard().getSelectedPieceTile();
         this.setPieceSelected(true);
+        this.repaint();
     }
 
     private void gameSetupRound(int row, int col) {
 
+        this.getGameBoard().showAvailableTiles();
         this.getGameBoard().executeInitialPlacementOnBoard(row, col, this.getGameBoard().getPieceCollection());
         this.repaint();
         this.getGameBoard().switchPlayerOnTurn();
         if(this.isGameSetupOver()) {
             this.setGameSetupStageComplete(true);
+            this.getGameBoard().setAllTilesToNormal();
         }
     }
 
@@ -228,6 +238,7 @@ public class Render extends JFrame implements MouseListener {
 
     private void moveExecutionStage(int row, int col) {
 
+        this.getGameBoard().setAllTilesToNormal();
         if(!this.isThereIsAPieceInBox(row, col)) {
 
             this.executeMoveOnBoard(row, col);
@@ -248,6 +259,28 @@ public class Render extends JFrame implements MouseListener {
 
                 }
             }
+        }
+    }
+
+    private void printInfoToConsole() {
+
+        System.out.println("==================================================");
+        System.out.println("Player a points: " + this.getGameBoard().getPlayerA().getPlayerPoints());
+        System.out.println("Player b points: " + this.getGameBoard().getPlayerB().getPlayerPoints());
+        System.out.println("Player " + this.getGameBoard().getPlayerOnTurn().getPlayerId().toUpperCase() + " on turn");
+        System.out.println("==================================================");
+
+        if(!this.isGameSetupOver()) {
+            System.out.println("Game setup stage");
+        }
+
+        if(this.isSetupCompleteAndPieceNotSelected()) {
+            System.out.println("Select piece");
+        }
+        if(this.isSetupCompleteAndPieceSelected()) {
+
+            System.out.println("Piece selected on row: " + this.getGameBoard().getSelectedPiece().getRow()
+                                + " and on col: " + this.getGameBoard().getSelectedPiece().getCol());
         }
     }
 }

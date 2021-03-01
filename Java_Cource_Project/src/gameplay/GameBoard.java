@@ -36,6 +36,7 @@ public class GameBoard {
         this.fillUpPlayerPieceCollection(this.getPlayerA());
         this.fillUpPlayerPieceCollection(this.getPlayerB());
         this.setPlayerOnTurn(this.getPlayerA());
+        this.setAllTilesToNormal();
 
     }
 
@@ -169,7 +170,7 @@ public class GameBoard {
             return row <= 1;
         } else {
 
-            return row >= 4;
+            return row >= 5;
         }
     }
 
@@ -254,5 +255,57 @@ public class GameBoard {
     public int trowDice(int min, int max) {
 
         return (int) (Math.random() * max) + min;
+    }
+
+    public void setAllTilesToNormal() {
+
+        for (int i = 0; i < this.getTileCollection().length; i++) {
+            for (int j = 0; j < this.getTileCollection()[i].length; j++) {
+
+                this.getTileCollection()[i][j].setTileStateId("normalTile");
+            }
+        }
+    }
+
+    public void showAvailableTiles() {
+
+        for (int i = 0; i < this.getTileCollection().length; i++) {
+            for (int j = 0; j < this.getTileCollection()[i].length; j++) {
+
+                if(this.isTileAvailableForPlayer(i, j)) {
+
+                    this.getTileCollection()[i][j].setTileStateId("normalTile");
+
+                } else {
+
+                    this.getTileCollection()[i][j].setTileStateId("setupStageTile");
+
+                }
+            }
+        }
+    }
+
+    private boolean isTileAvailableForPlayer(int row, int col) {
+
+        if(this.getPlayerOnTurn().getPlayerId().equals("b")) {
+
+            return row <= 1 && this.getPieceCollection()[row][col] == null;
+        } else {
+
+            return row >= 5 && this.getPieceCollection()[row][col] == null;
+        }
+    }
+    public void getSelectedPieceTile() {
+
+        for (int i = 0; i < this.getTileCollection().length; i++) {
+            for (int j = 0; j < this.getTileCollection()[i].length; j++) {
+
+                if(this.getSelectedPiece().getRow() == i &&
+                    this.getSelectedPiece().getCol() == j) {
+
+                    this.getTileCollection()[i][j].setTileStateId("selectedPieceTile");
+                }
+            }
+        }
     }
 }

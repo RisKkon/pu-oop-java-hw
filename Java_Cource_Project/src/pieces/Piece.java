@@ -1,5 +1,7 @@
 package pieces;
 
+import tiles.Tile;
+
 import java.awt.*;
 
 public abstract class Piece {
@@ -45,4 +47,16 @@ public abstract class Piece {
     public abstract boolean isMoveInRange(int row, int col, Piece[][] pieceCollection);
 
     public abstract boolean isAttackValid(int row, int col, Piece[][] pieceCollection);
+
+    public void showAvailableMoves(Piece[][] pieceCollection, Tile[][] tileCollection) {
+
+        for (int i = 0; i < tileCollection.length; i++) {
+            for (int j = 0; j < tileCollection[i].length; j++) {
+
+                if(this.isMoveInRange(i, j, pieceCollection)) {
+                    tileCollection[i][j].setTileStateId("availableBoxToMoveTile");
+                }
+            }
+        }
+    }
 }
