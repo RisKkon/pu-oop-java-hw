@@ -140,19 +140,15 @@ public class GameBoard {
     }
     public void executeInitialPlacementOnBoard(int row, int col, Piece[][] pieceCollection) {
 
-        if(this.isPlacementValid(row, col, pieceCollection)) {
-            int randomNum = this.trowDice(0, this.getPlayerOnTurn().getPlayerPieceCollection().size());
+        int randomNum = this.trowDice(0, this.getPlayerOnTurn().getPlayerPieceCollection().size());
 
-            Piece pieceToPlace = this.getPlayerOnTurn().getPlayerPieceCollection().get(randomNum);
-            pieceCollection[row][col] = pieceToPlace;
-            pieceToPlace.setRow(row);
-            pieceToPlace.setCol(col);
-            pieceToPlace.setPiecePlayerId(this.getPlayerOnTurn().getPlayerId());
-            this.getPlayerOnTurn().getPlayerPieceCollection().remove(randomNum);
-            this.updatePlayerAttributes();
-        } else {
-            this.switchPlayerOnTurn();
-        }
+        Piece pieceToPlace = this.getPlayerOnTurn().getPlayerPieceCollection().get(randomNum);
+        pieceCollection[row][col] = pieceToPlace;
+        pieceToPlace.setRow(row);
+        pieceToPlace.setCol(col);
+        pieceToPlace.setPiecePlayerId(this.getPlayerOnTurn().getPlayerId());
+        this.getPlayerOnTurn().getPlayerPieceCollection().remove(randomNum);
+        this.updatePlayerAttributes();
     }
 
     private void updatePlayerAttributes() {
@@ -167,7 +163,7 @@ public class GameBoard {
         }
     }
 
-    private boolean isPlacementValid(int row, int col, Piece[][] pieceCollection) {
+    public boolean isPlacementOnValidSide(int row) {
 
         if(this.getPlayerOnTurn().getPlayerId().equals("a")) {
 
@@ -179,15 +175,15 @@ public class GameBoard {
     }
 
     public boolean isSelectedPieceValid(int row, int col, Piece[][] pieceCollection, JFrame frame) {
+
         try {
             return pieceCollection[row][col].getPiecePlayerId()
                     .equals(this.getPlayerOnTurn().getPlayerId());
         }
-        catch (Exception e) {
-
-            new Modal(frame, "Wrong piece", "Selected piece is not yours", 400, 100);
+        catch (Exception ignored) {
             return false;
         }
+
     }
 
     public boolean isThereAPieceHere(int row, int col) {
@@ -334,5 +330,10 @@ public class GameBoard {
             }
         }
         return playerA.size() == 0 || playerB.size() == 0;
+    }
+
+    public boolean isBoxEmpty(int row, int col) {
+
+        return this.getPieceCollection()[row][col] == null;
     }
 }

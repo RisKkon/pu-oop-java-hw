@@ -1,8 +1,6 @@
 package ui;
 
 import gameplay.GameBoard;
-import gameplay.Player;
-import pieces.Piece;
 
 import javax.swing.*;
 import java.awt.*;
@@ -212,12 +210,20 @@ public class Render extends JFrame implements MouseListener {
     private void gameSetupRound(int row, int col) {
 
         this.getGameBoard().showAvailableTiles();
-        this.getGameBoard().executeInitialPlacementOnBoard(row, col, this.getGameBoard().getPieceCollection());
-        this.repaint();
-        this.getGameBoard().switchPlayerOnTurn();
-        if(this.isGameSetupOver()) {
-            this.setGameSetupStageComplete(true);
-            this.getGameBoard().setAllTilesToNormal();
+        if(this.getGameBoard().isPlacementOnValidSide(row) && this.getGameBoard().isBoxEmpty(row, col)) {
+
+            this.getGameBoard().executeInitialPlacementOnBoard(row, col, this.getGameBoard().getPieceCollection());
+            this.repaint();
+            this.getGameBoard().switchPlayerOnTurn();
+            if (this.isGameSetupOver()) {
+                this.setGameSetupStageComplete(true);
+                this.getGameBoard().setAllTilesToNormal();
+
+            }
+        } else {
+            new Modal(this, "Invalid placement",
+                    "You can't place a piece here, try again", 400, 100);
+
         }
     }
 
@@ -249,6 +255,8 @@ public class Render extends JFrame implements MouseListener {
 
         if(this.getGameBoard().isSelectedPieceValid(row, col, this.getGameBoard().getPieceCollection(), this)) {
             this.selectPiece(row, col);
+        } else {
+            new Modal(this, "Wrong piece", "Selected piece is not yours", 400, 100);
         }
     }
 
