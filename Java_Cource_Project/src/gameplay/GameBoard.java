@@ -222,9 +222,8 @@ public class GameBoard {
             this.getSelectedPiece().setCol(attackCol);
             this.getPieceCollection()[oldRow][oldCol] = null;
         } else {
-
-            this.getPieceCollection()[attackRow][attackCol].setAttackPoints(
-                    this.getPieceCollection()[attackRow][attackCol].getHealthPoints() - damage);
+            int newPoints = this.getPieceCollection()[attackRow][attackCol].getAttackPoints() - damage;
+            this.getPieceCollection()[attackRow][attackCol].setAttackPoints(newPoints);
         }
     }
 }
