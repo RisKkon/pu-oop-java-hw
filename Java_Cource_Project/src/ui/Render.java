@@ -25,6 +25,7 @@ public class Render extends JFrame implements MouseListener {
         this.setSize(900, 700);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
+        this.setTitle("Kurvi i belo do grob");
         this.addMouseListener(this);
         this.setVisible(true);
 
@@ -140,7 +141,8 @@ public class Render extends JFrame implements MouseListener {
 
     private boolean isThereIsAPieceInBox(int row, int col) {
 
-        return this.getGameBoard().isThereAPieceHere(row, col);
+        return this.getGameBoard().isThereAPieceHere(row, col) && !this.isWasMoveSuccessful();
+
     }
 
     private boolean isSetupCompleteAndPieceNotSelected() {
@@ -241,6 +243,9 @@ public class Render extends JFrame implements MouseListener {
                 } else {
 
                     new Modal(this, "Invalid heal", "Invalid healing attempt, try again",400, 100 );
+                    this.setPieceSelected(false);
+
+
                 }
             }
         }

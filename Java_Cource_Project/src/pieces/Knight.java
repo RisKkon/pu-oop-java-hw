@@ -21,14 +21,16 @@ public class Knight extends Piece{
 
         int tileX = this.getCol() * 100;
         int tileY = this.getRow() * 100;
-        //g.setColor(Color.BLACK);
         if(this.getPiecePlayerId().equals("a")) {
             g.setColor(Color.BLACK);
         } else {
             g.setColor(Color.WHITE);
         }
-        g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
-        g.drawString("K", tileX + 40, tileY + 60);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 40));
+        g.drawString("K", tileX + 38, tileY + 60);
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+        g.setColor(Color.decode("#ddff00"));
+        g.drawString(Integer.toString(this.getHealthPoints()), tileX + 42, tileY + 90);
 
     }
 
