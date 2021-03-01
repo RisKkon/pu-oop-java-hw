@@ -9,6 +9,9 @@ public class Knight extends Piece{
     public Knight() {
 
         this.setPieceId("knight");
+        this.setAttackPoints(8);
+        this.setDefensePoints(3);
+        this.setHealthPoints(15);
     }
 
 
@@ -35,7 +38,12 @@ public class Knight extends Piece{
     }
 
     @Override
-    public boolean isAttackValid(int row, int col, Piece[][] pieceCollection) {
-        return false;
+    public boolean isAttackValid(int attackRow, int attackCol, Piece[][] pieceCollection) {
+
+        int rowCoefficient = Math.abs(attackRow - this.getRow());
+        int colCoefficient = Math.abs(attackCol - this.getCol());
+
+        return (rowCoefficient == 1 && colCoefficient == 0) ||
+                (rowCoefficient == 0 && colCoefficient == 1);
     }
 }

@@ -7,6 +7,9 @@ public class Dwarf extends  Piece{
     public Dwarf() {
 
         this.setPieceId("dwarf");
+        this.setAttackPoints(6);
+        this.setDefensePoints(2);
+        this.setHealthPoints(12);
     }
 
 

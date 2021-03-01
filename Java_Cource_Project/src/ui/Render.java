@@ -89,7 +89,9 @@ public class Render extends JFrame implements MouseListener {
                 if(!this.getGameBoard().getPieceCollection()[row][col].getPiecePlayerId().equals(
                         this.getGameBoard().getPlayerOnTurn().getPlayerId())) {
 
-
+                    if (this.getGameBoard().getSelectedPiece().isAttackValid(row, col, this.getGameBoard().getPieceCollection())) {
+                        this.getGameBoard().executeAttack(row, col);
+                    }
                 }
             }
 
@@ -123,8 +125,6 @@ public class Render extends JFrame implements MouseListener {
             this.getGameBoard().switchPlayerOnTurn();
             this.setWasMoveSuccessful(false);
         }
-
-
     }
 
     @Override
@@ -157,4 +157,5 @@ public class Render extends JFrame implements MouseListener {
          return this.getGameBoard().getPlayerA().getPlayerPieceCollection().size() == 0 &&
                 this.getGameBoard().getPlayerB().getPlayerPieceCollection().size() == 0;
     }
+
 }

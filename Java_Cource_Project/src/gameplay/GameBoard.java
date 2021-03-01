@@ -180,7 +180,7 @@ public class GameBoard {
         }
         catch (Exception e) {
 
-            Modal message = new Modal(frame, "Wrong piece", "Selected piece is not yours", 400, 100);
+            new Modal(frame, "Wrong piece", "Selected piece is not yours", 400, 100);
             return false;
         }
     }
@@ -211,5 +211,20 @@ public class GameBoard {
 
         int oldRow = this.getSelectedPiece().getRow();
         int oldCol = this.getSelectedPiece().getCol();
+
+        int damage = this.getPieceCollection()[oldRow][oldCol].getAttackPoints() -
+                this.getPieceCollection()[attackRow][attackCol].getDefensePoints();
+
+        if(damage >= this.getPieceCollection()[attackRow][attackCol].getHealthPoints()) {
+
+            this.getPieceCollection()[attackRow][attackCol] = this.getPieceCollection()[oldRow][oldCol];
+            this.getSelectedPiece().setRow(attackRow);
+            this.getSelectedPiece().setCol(attackCol);
+            this.getPieceCollection()[oldRow][oldCol] = null;
+        } else {
+
+            this.getPieceCollection()[attackRow][attackCol].setAttackPoints(
+                    this.getPieceCollection()[attackRow][attackCol].getHealthPoints() - damage);
+        }
     }
 }

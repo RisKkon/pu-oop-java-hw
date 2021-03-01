@@ -8,6 +8,21 @@ public abstract class Piece {
     private int col;
     private String pieceId;
     private String piecePlayerId;
+    private int attackPoints;
+    private int defensePoints;
+    private int healthPoints;
+
+    public int getAttackPoints() { return attackPoints; }
+
+    public void setAttackPoints(int attackPoints) { this.attackPoints = attackPoints; }
+
+    public int getDefensePoints() { return defensePoints; }
+
+    public void setDefensePoints(int defensePoints) { this.defensePoints = defensePoints; }
+
+    public int getHealthPoints() { return healthPoints; }
+
+    public void setHealthPoints(int healthPoints) { this.healthPoints = healthPoints; }
 
     public int getRow() { return row; }
 

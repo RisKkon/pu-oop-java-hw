@@ -7,6 +7,9 @@ public class Elf extends Piece  {
     public Elf() {
 
         this.setPieceId("elf");
+        this.setAttackPoints(5);
+        this.setDefensePoints(1);
+        this.setHealthPoints(10);
     }
 
 
