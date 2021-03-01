@@ -1,6 +1,7 @@
 package ui;
 
 import gameplay.GameBoard;
+import pieces.Piece;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,11 +79,12 @@ public class Render extends JFrame implements MouseListener {
         int row = this.getLocationBasedOnCoordinates(e.getY());
         int col = this.getLocationBasedOnCoordinates(e.getX());
 
-        if(this.isSetupCompleteAndPieceSelected()) {
+        if (this.isSetupCompleteAndPieceSelected()) {
 
             this.moveExecutionStage(row, col);
+
         }
-        if(this.isSetupCompleteAndPieceNotSelected()) {
+        if (this.isSetupCompleteAndPieceNotSelected()) {
 
             this.pieceSelectionStage(row, col);
         }
@@ -90,9 +92,11 @@ public class Render extends JFrame implements MouseListener {
         this.checkIfMoveFailed();
         this.checkIfMoveWasSuccessful();
         this.printInfoToConsole();
-        if(this.checkIfGameIsOver()) {
-
+        if(this.checkIfGameIsOver() && this.isGameSetupStageComplete) {
+            this.gameOverMessage();
+            System.exit(1);
         }
+
     }
 
     @Override
@@ -331,5 +335,22 @@ public class Render extends JFrame implements MouseListener {
 
         this.checkIfPlayerHasNoPieces();
         return this.isGameOver;
+    }
+
+    private void gameOverMessage() {
+
+        System.out.println();
+        System.out.println("Game Over!!        rounds player: " + this.getGameBoard()
+                                                                     .getRoundCounter());
+        System.out.println("Game winner is player" + this.getGameBoard().getPlayerWinner()
+                                                     .getPlayerId().toUpperCase());
+        System.out.print("Player B's taken pieces: ");
+        this.getGameBoard().getPlayerA().getPlayerDeadPieces().forEach(e -> System.out.print(e.getPieceId() + " "));
+        System.out.println();
+        System.out.print("Player A's taken pieces: ");
+        this.getGameBoard().getPlayerB().getPlayerDeadPieces().forEach(e -> System.out.print(e.getPieceId() + " "));
+        System.out.println("Player A's points: " + this.getGameBoard().getPlayerA().getPlayerPoints());
+        System.out.println("Player B's points: " + this.getGameBoard().getPlayerB().getPlayerPoints());
+
     }
 }

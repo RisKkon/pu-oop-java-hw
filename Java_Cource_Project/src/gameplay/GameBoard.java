@@ -1,9 +1,6 @@
 package gameplay;
 
-import pieces.Dwarf;
-import pieces.Elf;
-import pieces.Knight;
-import pieces.Piece;
+import pieces.*;
 import tiles.BlackTile;
 import tiles.GreyTile;
 import tiles.RedTile;
@@ -20,6 +17,7 @@ public class GameBoard {
     private Player playerA;
     private Player playerB;
     private Player playerOnTurn;
+    private Player playerWinner;
     private Tile[][] tileCollection;
     private Piece[][] pieceCollection;
     private Piece selectedPiece;
@@ -39,8 +37,13 @@ public class GameBoard {
         this.fillUpPlayerPieceCollection(this.getPlayerB());
         this.setPlayerOnTurn(this.getPlayerA());
         this.setAllTilesToNormal();
+        this.spawnObstacles();
 
     }
+
+    public Player getPlayerWinner() { return playerWinner; }
+
+    public void setPlayerWinner(Player playerWinner) { this.playerWinner = playerWinner; }
 
     public int getRoundCounter() { return roundCounter; }
 
@@ -321,19 +324,45 @@ public class GameBoard {
 
                 if(this.getPieceCollection()[i][j] != null) {
 
-                    if(this.getPieceCollection()[i][j].getPiecePlayerId().equals("a")) {
-                        playerA.add(this.getPieceCollection()[i][j]);
-                    } else {
-                        playerB.add(this.getPieceCollection()[i][j]);
+                    if(this.getPieceCollection()[i][j].getPiecePlayerId() != null) {
+                        if (this.getPieceCollection()[i][j].getPiecePlayerId().equals("a")) {
+                            playerA.add(this.getPieceCollection()[i][j]);
+                        } else {
+                            playerB.add(this.getPieceCollection()[i][j]);
+                        }
                     }
                 }
             }
         }
+        this.setGameWinner(playerA, playerB);
         return playerA.size() == 0 || playerB.size() == 0;
     }
 
     public boolean isBoxEmpty(int row, int col) {
 
         return this.getPieceCollection()[row][col] == null;
+    }
+
+    public void setGameWinner(ArrayList<Piece> playerA, ArrayList<Piece> playerB) {
+
+        if(playerA.size() == 0) {
+
+            this.setPlayerWinner(this.getPlayerB());
+        }
+        if(playerB.size() == 0) {
+
+            this.setPlayerWinner(this.getPlayerA());
+        }
+    }
+    private void spawnObstacles() {
+
+        int numOfObstacles = this.trowDice(1, 5);
+        for (int i = 0; i < numOfObstacles; i++) {
+            int row = this.trowDice(2, 3);
+            int col = this.trowDice(0, 8);
+            this.getPieceCollection()[row][col] = new Obstacle();
+            this.getPieceCollection()[row][col].setRow(row);
+            this.getPieceCollection()[row][col].setCol(col);
+        }
     }
 }
