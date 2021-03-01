@@ -16,6 +16,7 @@ public class Render extends JFrame implements MouseListener {
     private boolean isPieceSelected;
     private boolean didMoveFail;
     private boolean wasMoveSuccessful;
+    private boolean isGameOver;
 
     public Render(GameBoard gameboard) {
 
@@ -24,15 +25,15 @@ public class Render extends JFrame implements MouseListener {
         this.isPieceSelected = false;
         this.didMoveFail = false;
         this.wasMoveSuccessful = false;
+        this.isGameOver = false;
         this.setSize(900, 700);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
-        this.setTitle("Kurvi i belo do grob");
         this.addMouseListener(this);
         this.setVisible(true);
-
-
     }
+
+    public void setGameOver(boolean gameOver) { isGameOver = gameOver; }
 
     public boolean isWasMoveSuccessful() { return wasMoveSuccessful; }
 
@@ -91,6 +92,9 @@ public class Render extends JFrame implements MouseListener {
         this.checkIfMoveFailed();
         this.checkIfMoveWasSuccessful();
         this.printInfoToConsole();
+        if(this.checkIfGameIsOver()) {
+
+        }
     }
 
     @Override
@@ -169,6 +173,12 @@ public class Render extends JFrame implements MouseListener {
             this.getGameBoard().setSelectedPiece(null);
             this.setPieceSelected(false);
             this.setWasMoveSuccessful(true);
+        } else {
+
+            new Modal(this, "Invalid attack!",
+                    "You are attempting an invalid attack try again", 400, 100);
+            this.setPieceSelected(false);
+            this.getGameBoard().roundCounter--;
         }
         this.repaint();
     }
@@ -177,9 +187,15 @@ public class Render extends JFrame implements MouseListener {
 
         this.getGameBoard().executeHeal(row, col);
         int diceNum = this.getGameBoard().trowDice(1, 100);
-        if(diceNum % 2 == 0) {
+        if(diceNum % 2 != 0) {
+
+            new Modal(this, "Lucky", "Player " + this.getGameBoard()
+                    .getPlayerOnTurn().getPlayerId().toUpperCase() + " got lucky, go again", 400, 100);
             this.getGameBoard().switchPlayerOnTurn();
         }
+        this.repaint();
+        this.setWasMoveSuccessful(true);
+        this.setPieceSelected(false);
     }
 
     private void selectPiece(int row, int col) {
@@ -242,21 +258,24 @@ public class Render extends JFrame implements MouseListener {
         if(!this.isThereIsAPieceInBox(row, col)) {
 
             this.executeMoveOnBoard(row, col);
+            this.increaseRoundCounter();
         }
         if(this.isThereIsAPieceInBox(row, col)) {
 
             if(this.doesPlayerWantToAttackEnemyPiece(row, col)) {
 
                 this.executeAttackOnBoard(row, col);
+                this.increaseRoundCounter();
             } else {
                 if (this.doesPlayerWantToHealAPiece(row, col)) {
                     this.executeHealOnBoard(row, col);
+                    this.increaseRoundCounter();
                 } else {
 
                     new Modal(this, "Invalid heal", "Invalid healing attempt, try again",400, 100 );
                     this.setPieceSelected(false);
-
-
+                    this.setDidMoveFail(true);
+                    this.repaint();
                 }
             }
         }
@@ -265,7 +284,8 @@ public class Render extends JFrame implements MouseListener {
     private void printInfoToConsole() {
 
         System.out.println("==================================================");
-        System.out.println("Player a points: " + this.getGameBoard().getPlayerA().getPlayerPoints());
+        System.out.println("Player a points: " + this.getGameBoard().getPlayerA().getPlayerPoints()
+                + "             round: " + this.getGameBoard().getRoundCounter());
         System.out.println("Player b points: " + this.getGameBoard().getPlayerB().getPlayerPoints());
         System.out.println("Player " + this.getGameBoard().getPlayerOnTurn().getPlayerId().toUpperCase() + " on turn");
         System.out.println("==================================================");
@@ -282,5 +302,26 @@ public class Render extends JFrame implements MouseListener {
             System.out.println("Piece selected on row: " + this.getGameBoard().getSelectedPiece().getRow()
                                 + " and on col: " + this.getGameBoard().getSelectedPiece().getCol());
         }
+    }
+
+    private void increaseRoundCounter() {
+
+        if(this.isGameSetupStageComplete) {
+
+            this.getGameBoard().roundCounter++;
+        }
+    }
+
+    private void checkIfPlayerHasNoPieces() {
+
+        if(this.getGameBoard().isGameOver()) {
+            this.setGameOver(true);
+        }
+    }
+
+    private boolean checkIfGameIsOver() {
+
+        this.checkIfPlayerHasNoPieces();
+        return this.isGameOver;
     }
 }

@@ -9,14 +9,21 @@ public class Player {
     private String playerId;
     private ArrayList<Piece> playerPieceCollection;
     private int playerPoints;
+    private ArrayList<Piece> playerDeadPieces;
 
 
     public Player(String playerId) {
 
         this.playerId = playerId;
         this.playerPieceCollection = new ArrayList<>();
+        this.playerDeadPieces = new ArrayList<>();
         this.setPlayerPoints(0);
+
     }
+
+    public ArrayList<Piece> getPlayerDeadPieces() { return playerDeadPieces; }
+
+    public void setPlayerDeadPieces(ArrayList<Piece> playerDeadPieces) { this.playerDeadPieces = playerDeadPieces; }
 
     public int getPlayerPoints() {
         return playerPoints;
@@ -29,4 +36,6 @@ public class Player {
     public String getPlayerId() { return playerId; }
 
     public ArrayList<Piece> getPlayerPieceCollection() { return playerPieceCollection; }
+
+    public void addPlayerPoints(int points) { this.playerPoints += points; }
 }

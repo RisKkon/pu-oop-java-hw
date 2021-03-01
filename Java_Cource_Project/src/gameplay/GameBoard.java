@@ -1,6 +1,5 @@
 package gameplay;
 
-import jdk.jshell.Snippet;
 import pieces.Dwarf;
 import pieces.Elf;
 import pieces.Knight;
@@ -12,6 +11,7 @@ import tiles.Tile;
 import ui.Modal;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class GameBoard {
 
@@ -24,12 +24,14 @@ public class GameBoard {
     private Piece[][] pieceCollection;
     private Piece selectedPiece;
     public int turnCounter;
+    public int roundCounter;
 
     public GameBoard() {
 
         this.playerA = new Player("a");
         this.playerB = new Player("b");
         this.turnCounter = 1;
+        this.roundCounter = 1;
         this.tileCollection = new Tile[GAME_BOARD_HEIGHT][GAME_BOARD_WIDTH];
         this.pieceCollection = new Piece[GAME_BOARD_HEIGHT][GAME_BOARD_WIDTH];
         this.fillUpTileCollection();
@@ -39,6 +41,8 @@ public class GameBoard {
         this.setAllTilesToNormal();
 
     }
+
+    public int getRoundCounter() { return roundCounter; }
 
     public Piece getSelectedPiece() { return selectedPiece; }
 
@@ -218,6 +222,7 @@ public class GameBoard {
 
         if(damage >= this.getPieceCollection()[attackRow][attackCol].getHealthPoints()) {
 
+            this.getPlayerOnTurn().getPlayerDeadPieces().add(this.getPieceCollection()[attackRow][attackCol]);
             this.getPieceCollection()[attackRow][attackCol] = this.getPieceCollection()[oldRow][oldCol];
             this.getSelectedPiece().setRow(attackRow);
             this.getSelectedPiece().setCol(attackCol);
@@ -226,6 +231,7 @@ public class GameBoard {
             int newPoints = this.getPieceCollection()[attackRow][attackCol].getHealthPoints() - damage;
             this.getPieceCollection()[attackRow][attackCol].setHealthPoints(newPoints);
         }
+        this.getPlayerOnTurn().addPlayerPoints(damage);
     }
 
     public void executeHeal(int row, int col) {
@@ -307,5 +313,26 @@ public class GameBoard {
                 }
             }
         }
+    }
+
+    public boolean isGameOver() {
+
+        ArrayList<Piece> playerA = new ArrayList<>();
+        ArrayList<Piece> playerB = new ArrayList<>();
+
+        for (int i = 0; i < this.getPieceCollection().length; i++) {
+            for (int j = 0; j < this.getPieceCollection()[i].length; j++) {
+
+                if(this.getPieceCollection()[i][j] != null) {
+
+                    if(this.getPieceCollection()[i][j].getPiecePlayerId().equals("a")) {
+                        playerA.add(this.getPieceCollection()[i][j]);
+                    } else {
+                        playerB.add(this.getPieceCollection()[i][j]);
+                    }
+                }
+            }
+        }
+        return playerA.size() == 0 || playerB.size() == 0;
     }
 }

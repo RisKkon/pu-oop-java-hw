@@ -62,7 +62,7 @@ public abstract class Tile {
 
         g.setColor(Color.BLACK);
         g.fillRect(tileX, tileY, tileSize, tileSize);
-        g.setColor(Color.RED);
+        g.setColor(Color.decode("#a3262a"));
         g.fillRect(tileX + 2, tileY + 2, tileSize - 2, tileSize - 2);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
         g.drawString("X", tileX + 38, tileY + 60);

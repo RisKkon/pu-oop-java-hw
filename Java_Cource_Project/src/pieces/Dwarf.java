@@ -51,8 +51,8 @@ public class Dwarf extends  Piece{
 
         boolean isAttackingStraight = rowCoefficient == 2 && colCoefficient == 0 ||
                 colCoefficient == 2 && rowCoefficient == 0;
-        boolean isAttackingGLike = rowCoefficient == 1 && colCoefficient == 1;
-        return (isAttackingStraight || isAttackingGLike);
+
+        return isAttackingStraight;
     }
 }
 
