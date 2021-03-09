@@ -21,8 +21,6 @@ public abstract class Tile {
 
     public void setCol(int col) { this.col = col; }
 
-    public String getTileId() { return tileId; }
-
     public void setTileId(String tileId) { this.tileId = tileId; }
 
     public Color getColor() { return color; }

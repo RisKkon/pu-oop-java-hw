@@ -5,9 +5,6 @@ import tiles.BlackTile;
 import tiles.GreyTile;
 import tiles.RedTile;
 import tiles.Tile;
-import ui.Modal;
-
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class GameBoard {
@@ -55,8 +52,6 @@ public class GameBoard {
 
     public void setPlayerOnTurn(Player playerOnTurn) { this.playerOnTurn = playerOnTurn; }
 
-    public int getTurnCounter() { return turnCounter; }
-
     public Player getPlayerA() { return playerA; }
 
     public void setPlayerA(Player playerA) { this.playerA = playerA; }
@@ -67,11 +62,7 @@ public class GameBoard {
 
     public Tile[][] getTileCollection() { return tileCollection; }
 
-    public void setTileCollection(Tile[][] tileCollection) { this.tileCollection = tileCollection; }
-
     public Piece[][] getPieceCollection() { return pieceCollection; }
-
-    public void setPieceCollection(Piece[][] pieceCollection) { this.pieceCollection = pieceCollection; }
 
     public void fillUpTileCollection() {
 
@@ -177,7 +168,7 @@ public class GameBoard {
         }
     }
 
-    public boolean isSelectedPieceValid(int row, int col, Piece[][] pieceCollection, JFrame frame) {
+    public boolean isSelectedPieceValid(int row, int col, Piece[][] pieceCollection) {
 
         try {
             return pieceCollection[row][col].getPiecePlayerId()
@@ -245,7 +236,8 @@ public class GameBoard {
         for (int i = 0; i < this.getPieceCollection().length; i++) {
             for (int j = 0; j < this.getPieceCollection()[i].length; j++) {
 
-                if(this.getPieceCollection()[i][j] != null) {
+                if(this.getPieceCollection()[i][j] != null &&
+                        !this.getPieceCollection()[i][j].getPieceId().equals("obstacle")) {
 
                     int healthPoints = this.getPieceCollection()[i][j].getHealthPoints();
 

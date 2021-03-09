@@ -1,7 +1,7 @@
 package ui;
 
 import gameplay.GameBoard;
-import pieces.Piece;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -257,7 +257,7 @@ public class Render extends JFrame implements MouseListener {
 
     private void pieceSelectionStage(int row, int col) {
 
-        if(this.getGameBoard().isSelectedPieceValid(row, col, this.getGameBoard().getPieceCollection(), this)) {
+        if(this.getGameBoard().isSelectedPieceValid(row, col, this.getGameBoard().getPieceCollection())) {
             this.selectPiece(row, col);
         } else {
             new Modal(this, "Wrong piece", "Selected piece is not yours", 400, 100);
@@ -326,7 +326,7 @@ public class Render extends JFrame implements MouseListener {
 
     private void checkIfPlayerHasNoPieces() {
 
-        if(this.getGameBoard().isGameOver()) {
+        if(this.getGameBoard().isGameOver() && this.isGameSetupOver()) {
             this.setGameOver(true);
         }
     }
@@ -350,6 +350,7 @@ public class Render extends JFrame implements MouseListener {
         System.out.print("Player A's taken pieces: ");
         this.getGameBoard().getPlayerB().getPlayerDeadPieces().forEach(e -> System.out.print(e.getPieceId() + " "));
         System.out.println("Player A's points: " + this.getGameBoard().getPlayerA().getPlayerPoints());
+        System.out.println();
         System.out.println("Player B's points: " + this.getGameBoard().getPlayerB().getPlayerPoints());
 
     }
