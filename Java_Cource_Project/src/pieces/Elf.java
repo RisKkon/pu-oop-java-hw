@@ -1,27 +1,25 @@
 package pieces;
 
-import tiles.Tile;
-
 import java.awt.*;
 
 public class Elf extends Piece  {
 
     public Elf() {
 
-        this.setPieceId("elf");
-        this.setAttackPoints(5);
-        this.setDefensePoints(1);
-        this.setHealthPoints(10);
+        setPieceId("elf");
+        setAttackPoints(5);
+        setDefensePoints(1);
+        setHealthPoints(10);
     }
 
 
     @Override
     public void renderPiece(Graphics g) {
 
-        int tileX = this.getCol() * 100;
-        int tileY = this.getRow() * 100;
+        int tileX = getCol() * 100;
+        int tileY = getRow() * 100;
 
-        if(this.getPiecePlayerId().equals("a")) {
+        if(getPiecePlayerId().equals("a")) {
             g.setColor(Color.BLACK);
         } else {
             g.setColor(Color.WHITE);
@@ -30,14 +28,14 @@ public class Elf extends Piece  {
         g.drawString("E", tileX + 38, tileY + 60);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
         g.setColor(Color.decode("#ddff00"));
-        g.drawString(Integer.toString(this.getHealthPoints()), tileX + 42, tileY + 90);
+        g.drawString(Integer.toString(getHealthPoints()), tileX + 42, tileY + 90);
     }
 
     @Override
     public boolean isMoveInRange(int newRow, int newCol, Piece[][] pieceCollection) {
 
-        int rowCoefficient = Math.abs(newRow - this.getRow());
-        int colCoefficient = Math.abs(newCol - this.getCol());
+        int rowCoefficient = Math.abs(newRow - getRow());
+        int colCoefficient = Math.abs(newCol - getCol());
         boolean isMovingStraight = rowCoefficient <= 3 && colCoefficient == 0 ||
                                     colCoefficient <= 3 && rowCoefficient == 0;
         boolean isMovingGLike = rowCoefficient <= 2 && colCoefficient <= 1 ||
@@ -48,8 +46,8 @@ public class Elf extends Piece  {
     @Override
     public boolean isAttackValid(int newRow, int newCol, Piece[][] pieceCollection) {
 
-        int rowCoefficient = Math.abs(newRow - this.getRow());
-        int colCoefficient = Math.abs(newCol - this.getCol());
+        int rowCoefficient = Math.abs(newRow - getRow());
+        int colCoefficient = Math.abs(newCol - getCol());
 
         boolean isAttackingStraight = rowCoefficient == 3 && colCoefficient == 0 ||
                 colCoefficient == 3 && rowCoefficient == 0;

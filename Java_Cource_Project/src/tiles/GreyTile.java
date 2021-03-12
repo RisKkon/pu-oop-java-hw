@@ -7,10 +7,10 @@ public class GreyTile extends Tile {
 
     public GreyTile(int row, int col) {
 
-        this.setRow(row);
-        this.setCol(col);
-        this.setTileId("greyTile");
-        this.setColor(Color.decode("#aaaaaa"));
+        setRow(row);
+        setCol(col);
+        setTileId("greyTile");
+        setColor(Color.decode("#aaaaaa"));
 
     }
 }

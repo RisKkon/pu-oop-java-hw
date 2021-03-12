@@ -6,16 +6,16 @@ public class Obstacle extends Piece {
 
     public Obstacle() {
 
-        this.setPieceId("obstacle");
-        this.setHealthPoints(1);
+        setPieceId("obstacle");
+        setHealthPoints(1);
     }
 
     @Override
     public void renderPiece(Graphics g) {
 
         int tileSize = 100;
-        int tileX = this.getCol() * tileSize;
-        int tileY = this.getRow() * tileSize;
+        int tileX = getCol() * tileSize;
+        int tileY = getRow() * tileSize;
 
         g.setColor(Color.BLACK);
         g.fillOval(tileX + 20, tileY + 20, tileSize - 40, tileSize- 40);

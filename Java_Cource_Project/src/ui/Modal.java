@@ -13,11 +13,11 @@ public class Modal extends JDialog {
         JLabel label = new JLabel(message);
         label.setFont(new Font("Calibre", Font.PLAIN, 18));
         panel.add(label);
-        this.getContentPane().add(panel);
-        this.setSize(width,height);
-        this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        this.setVisible(true);
+        getContentPane().add(panel);
+        setSize(width,height);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setVisible(true);
     }
 }
 

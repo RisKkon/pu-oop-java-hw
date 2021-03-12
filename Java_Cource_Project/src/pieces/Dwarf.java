@@ -6,19 +6,19 @@ public class Dwarf extends  Piece{
 
     public Dwarf() {
 
-        this.setPieceId("dwarf");
-        this.setAttackPoints(6);
-        this.setDefensePoints(2);
-        this.setHealthPoints(12);
+        setPieceId("dwarf");
+        setAttackPoints(6);
+        setDefensePoints(2);
+        setHealthPoints(12);
     }
 
 
     @Override
     public void renderPiece(Graphics g) {
 
-        int tileX = this.getCol() * 100;
-        int tileY = this.getRow() * 100;
-        if(this.getPiecePlayerId().equals("a")) {
+        int tileX = getCol() * 100;
+        int tileY = getRow() * 100;
+        if(getPiecePlayerId().equals("a")) {
             g.setColor(Color.BLACK);
         } else {
             g.setColor(Color.WHITE);
@@ -27,14 +27,14 @@ public class Dwarf extends  Piece{
         g.drawString("D", tileX + 38, tileY + 60);
         g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
         g.setColor(Color.decode("#ddff00"));
-        g.drawString(Integer.toString(this.getHealthPoints()), tileX + 42, tileY + 90);
+        g.drawString(Integer.toString(getHealthPoints()), tileX + 42, tileY + 90);
     }
 
     @Override
     public boolean isMoveInRange(int newRow, int newCol, Piece[][] pieceCollection) {
 
-        int rowCoefficient = Math.abs(newRow - this.getRow());
-        int colCoefficient = Math.abs(newCol - this.getCol());
+        int rowCoefficient = Math.abs(newRow - getRow());
+        int colCoefficient = Math.abs(newCol - getCol());
         boolean isMovingStraight = rowCoefficient <= 2 && colCoefficient == 0 ||
                 colCoefficient <= 2 && rowCoefficient == 0;
         boolean isMovingGLike = rowCoefficient <= 1 && colCoefficient <= 1;
@@ -45,8 +45,8 @@ public class Dwarf extends  Piece{
     @Override
     public boolean isAttackValid(int newRow, int newCol, Piece[][] pieceCollection) {
 
-        int rowCoefficient = Math.abs(newRow - this.getRow());
-        int colCoefficient = Math.abs(newCol - this.getCol());
+        int rowCoefficient = Math.abs(newRow - getRow());
+        int colCoefficient = Math.abs(newCol - getCol());
 
         return rowCoefficient == 2 && colCoefficient == 0 ||
                 colCoefficient == 2 && rowCoefficient == 0;

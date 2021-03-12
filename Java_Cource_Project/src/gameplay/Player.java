@@ -17,13 +17,11 @@ public class Player {
         this.playerId = playerId;
         this.playerPieceCollection = new ArrayList<>();
         this.playerDeadPieces = new ArrayList<>();
-        this.setPlayerPoints(0);
+        setPlayerPoints(0);
 
     }
 
     public ArrayList<Piece> getPlayerDeadPieces() { return playerDeadPieces; }
-
-    public void setPlayerDeadPieces(ArrayList<Piece> playerDeadPieces) { this.playerDeadPieces = playerDeadPieces; }
 
     public int getPlayerPoints() {
         return playerPoints;

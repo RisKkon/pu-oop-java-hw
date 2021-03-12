@@ -53,7 +53,7 @@ public abstract class Piece {
         for (int i = 0; i < tileCollection.length; i++) {
             for (int j = 0; j < tileCollection[i].length; j++) {
 
-                if(this.isMoveInRange(i, j, pieceCollection)) {
+                if(isMoveInRange(i, j, pieceCollection)) {
                     tileCollection[i][j].setTileStateId("availableBoxToMoveTile");
                 }
             }

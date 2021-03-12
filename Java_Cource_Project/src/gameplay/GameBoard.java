@@ -29,13 +29,12 @@ public class GameBoard {
         this.roundCounter = 1;
         this.tileCollection = new Tile[GAME_BOARD_HEIGHT][GAME_BOARD_WIDTH];
         this.pieceCollection = new Piece[GAME_BOARD_HEIGHT][GAME_BOARD_WIDTH];
-        this.fillUpTileCollection();
-        this.fillUpPlayerPieceCollection(this.getPlayerA());
-        this.fillUpPlayerPieceCollection(this.getPlayerB());
-        this.setPlayerOnTurn(this.getPlayerA());
-        this.setAllTilesToNormal();
-        this.spawnObstacles();
-
+        fillUpTileCollection();
+        fillUpPlayerPieceCollection(this.getPlayerA());
+        fillUpPlayerPieceCollection(this.getPlayerB());
+        setPlayerOnTurn(this.getPlayerA());
+        setAllTilesToNormal();
+        spawnObstacles();
     }
 
     public Player getPlayerWinner() { return playerWinner; }
@@ -64,18 +63,58 @@ public class GameBoard {
 
     public Piece[][] getPieceCollection() { return pieceCollection; }
 
+
+    /**
+     * Fill's up the Game Board with the correct tiles.
+     */
+
     public void fillUpTileCollection() {
 
+        //Fill's up the player "a" area.
         fillUpTileArea(2, 0);
+        //Fill's up the middle area.
         for (int i = 2; i < 5; i++) {
             for (int j = 0; j < 9; j++) {
-                this.getTileCollection()[i][j] = new RedTile(i, j);
 
+                this.getTileCollection()[i][j] = new RedTile(i, j);
             }
         }
+        //Fill's up the player "b" area.
         fillUpTileArea(7, 5);
     }
 
+    /**
+     *This method helps with the tiles setup.
+     * @param maxRow
+     * @param row
+     */
+    private void fillUpTileArea(int maxRow, int row) {
+
+        for (int i = row; i < maxRow; i++) {
+            for (int j = 0; j < 9; j++) {
+
+                if (i == 0) {
+                    if (j % 2 != 0) {
+                        getTileCollection()[i][j] = new GreyTile(i, j);
+                    } else {
+                        getTileCollection()[i][j] = new BlackTile(i, j);
+
+                    }
+                } else {
+                    if (j % 2 != 0) {
+                        getTileCollection()[i][j] = new BlackTile(i, j);
+                    } else {
+                        getTileCollection()[i][j] = new GreyTile(i, j);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Fill's up the piece collection for the certain player.
+     * @param player
+     */
     public void fillUpPlayerPieceCollection(Player player) {
 
         player.getPlayerPieceCollection().add(new Knight());
@@ -87,16 +126,43 @@ public class GameBoard {
 
     }
 
-    public void switchPlayerOnTurn() {
+    /**
+     * Goes over the game board and set's all the tiles to their normal state.
+     */
+    public void setAllTilesToNormal() {
 
-        if(getPlayerOnTurn().getPlayerId().equals("a")) {
+        for (int i = 0; i < getTileCollection().length; i++) {
+            for (int j = 0; j < getTileCollection()[i].length; j++) {
 
-            setPlayerOnTurn(getPlayerB());
-        } else {
-            setPlayerOnTurn(getPlayerA());
+                getTileCollection()[i][j].setTileStateId("normalTile");
+            }
         }
     }
 
+    /**
+     * Spawn's a random number of obstacles on the game board.
+     */
+    private void spawnObstacles() {
+
+        int numOfObstacles = trowDice(1, 5);
+
+        for (int i = 0; i < numOfObstacles; i++) {
+
+            int row = trowDice(2, 3);
+            int col = trowDice(0, 8);
+
+            getPieceCollection()[row][col] = new Obstacle();
+            getPieceCollection()[row][col].setRow(row);
+            getPieceCollection()[row][col].setCol(col);
+        }
+    }
+
+    /**
+     * Executes placement of a random piece from the player piece collection on the game board.
+     * @param row
+     * @param col
+     * @param pieceCollection
+     */
     public void executeInitialPlacementOnBoard(int row, int col, Piece[][] pieceCollection) {
 
         int randomNum = trowDice(0, getPlayerOnTurn().getPlayerPieceCollection().size());
@@ -111,11 +177,14 @@ public class GameBoard {
         updatePlayerAttributes();
     }
 
+    /**
+     * Used to update the player attributes from the player on turn and a certain player.
+     */
     private void updatePlayerAttributes() {
 
         if(getPlayerOnTurn().getPlayerId().equals("a")) {
 
-           setPlayerA(getPlayerA());
+            setPlayerA(getPlayerA());
 
         } else {
 
@@ -123,17 +192,41 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Switches the player on turn.
+     */
+    public void switchPlayerOnTurn() {
+
+        if(getPlayerOnTurn().getPlayerId().equals("a")) {
+
+            setPlayerOnTurn(getPlayerB());
+        } else {
+            setPlayerOnTurn(getPlayerA());
+        }
+    }
+
+    /**
+     * Checks if the player has chosen valid coordinates to place a piece.
+     * @param row
+     * @return
+     */
     public boolean isPlacementOnValidSide(int row) {
 
         if(getPlayerOnTurn().getPlayerId().equals("a")) {
 
             return row <= 1;
-        } else {
-
-            return row >= 5;
         }
+
+        return row >= 5;
     }
 
+    /**
+     * Checks if the player has selected a valid piece.
+     * @param row
+     * @param col
+     * @param pieceCollection
+     * @return
+     */
     public boolean isSelectedPieceValid(int row, int col, Piece[][] pieceCollection) {
 
         try {
@@ -146,28 +239,39 @@ public class GameBoard {
 
     }
 
+    /**
+     * Checks if there is a piece on the given coordinates.
+     * @param row
+     * @param col
+     * @return
+     */
     public boolean isThereAPieceHere(int row, int col) {
 
         return getPieceCollection()[row][col] != null;
     }
 
+    /**
+     * Executes a move on the game board.
+     * @param newRow
+     * @param newCol
+     */
     public void executeMove(int newRow, int newCol) {
 
         int oldRow = getSelectedPiece().getRow();
         int oldCol = getSelectedPiece().getCol();
 
-        if(getSelectedPiece().isMoveInRange(newRow, newCol, getPieceCollection())) {
-
-            getPieceCollection()[newRow][newCol] = getSelectedPiece();
-            getSelectedPiece().setRow(newRow);
-            getSelectedPiece().setCol(newCol);
-            getPieceCollection()[oldRow][oldCol] = null;
-            setSelectedPiece(null);
-
-
-        }
+        getPieceCollection()[newRow][newCol] = getSelectedPiece();
+        getSelectedPiece().setRow(newRow);
+        getSelectedPiece().setCol(newCol);
+        getPieceCollection()[oldRow][oldCol] = null;
+        setSelectedPiece(null);
     }
 
+    /**
+     * Executes an attack on the game board.
+     * @param attackRow
+     * @param attackCol
+     */
     public void executeAttack(int attackRow, int attackCol) {
 
         int oldRow = getSelectedPiece().getRow();
@@ -178,6 +282,7 @@ public class GameBoard {
 
         if(damage >= getPieceCollection()[attackRow][attackCol].getHealthPoints()) {
 
+            //If the attacked piece is going to die.
             getPlayerOnTurn().getPlayerDeadPieces().add(getPieceCollection()[attackRow][attackCol]);
             getPieceCollection()[attackRow][attackCol] = getPieceCollection()[oldRow][oldCol];
 
@@ -185,12 +290,18 @@ public class GameBoard {
             getSelectedPiece().setCol(attackCol);
             getPieceCollection()[oldRow][oldCol] = null;
         } else {
+            //If the attacked piece is going to survive.
             int newPoints = getPieceCollection()[attackRow][attackCol].getHealthPoints() - damage;
             getPieceCollection()[attackRow][attackCol].setHealthPoints(newPoints);
         }
         getPlayerOnTurn().addPlayerPoints(damage);
     }
 
+    /**
+     * Executes healing for a piece.
+     * @param row
+     * @param col
+     */
     public void executeHeal(int row, int col) {
 
         int healthToGive = trowDice(1, 6);
@@ -198,6 +309,9 @@ public class GameBoard {
         getPieceCollection()[row][col].setHealthPoints(newHealth);
     }
 
+    /**
+     * Removes all the pieces that have fallen in this round of battle.
+     */
     public void removeDeadPieces() {
 
         for (int i = 0; i < getPieceCollection().length; i++) {
@@ -221,16 +335,9 @@ public class GameBoard {
         return (int) (Math.random() * max) + min;
     }
 
-    public void setAllTilesToNormal() {
-
-        for (int i = 0; i < getTileCollection().length; i++) {
-            for (int j = 0; j < getTileCollection()[i].length; j++) {
-
-                getTileCollection()[i][j].setTileStateId("normalTile");
-            }
-        }
-    }
-
+    /**
+     * Shows on the game board all the available moves a player can execute.
+     */
     public void showAvailableTiles() {
 
         for (int i = 0; i < getTileCollection().length; i++) {
@@ -249,16 +356,25 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Checks if a tile is in range for the player.
+     * @param row
+     * @param col
+     * @return
+     */
     private boolean isTileAvailableForPlayer(int row, int col) {
 
         if(getPlayerOnTurn().getPlayerId().equals("b")) {
 
             return row <= 1 && getPieceCollection()[row][col] == null;
-        } else {
 
-            return row >= 5 && getPieceCollection()[row][col] == null;
         }
+        return row >= 5 && getPieceCollection()[row][col] == null;
     }
+
+    /**
+     * Changes the tile of the selected piece.
+     */
     public void getSelectedPieceTile() {
 
         for (int i = 0; i < getTileCollection().length; i++) {
@@ -272,6 +388,27 @@ public class GameBoard {
         }
     }
 
+    /**
+     * Sets the game winner.
+     * @param playerA
+     * @param playerB
+     */
+    public void setGameWinner(ArrayList<Piece> playerA, ArrayList<Piece> playerB) {
+
+        if(playerA.size() == 0) {
+
+            setPlayerWinner(getPlayerB());
+        }
+        if(playerB.size() == 0) {
+
+            setPlayerWinner(getPlayerA());
+        }
+    }
+
+    /**
+     * Checks if one of the players has no pieces left.
+     * @return
+     */
     public boolean isGameOver() {
 
         ArrayList<Piece> playerA = new ArrayList<>();
@@ -292,58 +429,8 @@ public class GameBoard {
                 }
             }
         }
+
         setGameWinner(playerA, playerB);
         return playerA.size() == 0 || playerB.size() == 0;
-    }
-
-    public boolean isBoxEmpty(int row, int col) {
-
-        return getPieceCollection()[row][col] == null;
-    }
-
-    public void setGameWinner(ArrayList<Piece> playerA, ArrayList<Piece> playerB) {
-
-        if(playerA.size() == 0) {
-
-            setPlayerWinner(getPlayerB());
-        }
-        if(playerB.size() == 0) {
-
-            setPlayerWinner(getPlayerA());
-        }
-    }
-    private void spawnObstacles() {
-
-        int numOfObstacles = trowDice(1, 5);
-        for (int i = 0; i < numOfObstacles; i++) {
-            int row = trowDice(2, 3);
-            int col = trowDice(0, 8);
-            getPieceCollection()[row][col] = new Obstacle();
-            getPieceCollection()[row][col].setRow(row);
-            getPieceCollection()[row][col].setCol(col);
-        }
-    }
-
-    private void fillUpTileArea(int maxRow, int row) {
-
-        for (int i = row; i < maxRow; i++) {
-            for (int j = 0; j < 9; j++) {
-
-                if (i == 0) {
-                    if (j % 2 != 0) {
-                        getTileCollection()[i][j] = new GreyTile(i, j);
-                    } else {
-                        getTileCollection()[i][j] = new BlackTile(i, j);
-
-                    }
-                } else {
-                    if (j % 2 != 0) {
-                        getTileCollection()[i][j] = new BlackTile(i, j);
-                    } else {
-                        getTileCollection()[i][j] = new GreyTile(i, j);
-                    }
-                }
-            }
-        }
     }
 }

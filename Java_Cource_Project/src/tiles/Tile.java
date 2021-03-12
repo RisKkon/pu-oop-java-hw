@@ -30,23 +30,23 @@ public abstract class Tile {
     public  void renderTile(Graphics g) {
 
         switch (this.getTileStateId()) {
-            case "normalTile" -> this.normalTileRender(g);
-            case "setupStageTile" -> this.setupStageTileRender(g);
-            case "availableBoxToMoveTile" -> this.availableBoxToMoveTileRender(g);
-            case "selectedPieceTile" -> this.selectedPieceTileRender(g);
+            case "normalTile" -> normalTileRender(g);
+            case "setupStageTile" -> setupStageTileRender(g);
+            case "availableBoxToMoveTile" -> availableBoxToMoveTileRender(g);
+            case "selectedPieceTile" -> selectedPieceTileRender(g);
         }
     }
 
     public void normalTileRender(Graphics g) {
 
         int tileSize = 100;
-        int tileX = this.getCol() * tileSize;
-        int tileY = this.getRow() * tileSize;
+        int tileX = getCol() * tileSize;
+        int tileY = getRow() * tileSize;
 
 
         g.setColor(Color.BLACK);
         g.fillRect(tileX, tileY, tileSize, tileSize);
-        g.setColor(this.getColor());
+        g.setColor(getColor());
         g.fillRect(tileX + 2, tileY + 2, tileSize - 2, tileSize - 2);
 
     }
@@ -54,8 +54,8 @@ public abstract class Tile {
     public void setupStageTileRender(Graphics g) {
 
         int tileSize = 100;
-        int tileX = this.getCol() * tileSize;
-        int tileY = this.getRow() * tileSize;
+        int tileX = getCol() * tileSize;
+        int tileY = getRow() * tileSize;
 
 
         g.setColor(Color.BLACK);
@@ -69,8 +69,8 @@ public abstract class Tile {
     public void availableBoxToMoveTileRender(Graphics g) {
 
         int tileSize = 100;
-        int tileX = this.getCol() * tileSize;
-        int tileY = this.getRow() * tileSize;
+        int tileX = getCol() * tileSize;
+        int tileY = getRow() * tileSize;
 
         g.setColor(Color.BLACK);
         g.fillRect(tileX, tileY, tileSize, tileSize);
@@ -82,14 +82,12 @@ public abstract class Tile {
     public void selectedPieceTileRender(Graphics g) {
 
         int tileSize = 100;
-        int tileX = this.getCol() * tileSize;
-        int tileY = this.getRow() * tileSize;
+        int tileX = getCol() * tileSize;
+        int tileY = getRow() * tileSize;
 
         g.setColor(Color.BLACK);
         g.fillRect(tileX, tileY, tileSize, tileSize);
         g.setColor(Color.decode("#322599"));
         g.fillRect(tileX + 2, tileY + 2, tileSize - 2, tileSize - 2);
-
-
     }
 }

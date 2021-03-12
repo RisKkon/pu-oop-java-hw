@@ -1,8 +1,6 @@
 package ui;
 
 import gameplay.GameBoard;
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -25,11 +23,11 @@ public class Render extends JFrame implements MouseListener {
         this.didMoveFail = false;
         this.wasMoveSuccessful = false;
         this.isGameOver = false;
-        this.setSize(900, 700);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.addMouseListener(this);
-        this.setVisible(true);
+        setSize(900, 700);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        addMouseListener(this);
+        setVisible(true);
     }
 
     public void setGameOver(boolean gameOver) { isGameOver = gameOver; }
@@ -56,18 +54,14 @@ public class Render extends JFrame implements MouseListener {
     public void paint(Graphics g) {
         super.paint(g);
 
+        //Paint's all the tiles and pieces.
+        for (int i = 0; i < getGameBoard().getTileCollection().length; i++) {
+            for (int j = 0; j < getGameBoard().getTileCollection()[i].length; j++) {
 
-        for (int i = 0; i < this.getGameBoard().getTileCollection().length; i++) {
-            for (int j = 0; j < this.getGameBoard().getTileCollection()[i].length; j++) {
+                getGameBoard().getTileCollection()[i][j].renderTile(g);
 
-                this.getGameBoard().getTileCollection()[i][j].renderTile(g);
-            }
-        }
-        for (int i = 0; i < this.getGameBoard().getPieceCollection().length ; i++) {
-            for (int j = 0; j <this.getGameBoard().getPieceCollection()[i].length ; j++) {
-
-                if(this.getGameBoard().getPieceCollection()[i][j] != null) {
-                    this.getGameBoard().getPieceCollection()[i][j].renderPiece(g);
+                if(getGameBoard().getPieceCollection()[i][j] != null) {
+                    getGameBoard().getPieceCollection()[i][j].renderPiece(g);
                 }
             }
         }
@@ -76,27 +70,26 @@ public class Render extends JFrame implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
 
-        int row = this.getLocationBasedOnCoordinates(e.getY());
-        int col = this.getLocationBasedOnCoordinates(e.getX());
+        int row = getLocationBasedOnCoordinates(e.getY());
+        int col = getLocationBasedOnCoordinates(e.getX());
 
-        if (this.isSetupCompleteAndPieceSelected()) {
+        if (isSetupCompleteAndPieceSelected()) {
 
-            this.moveExecutionStage(row, col);
+            moveExecutionStage(row, col);
 
         }
-        if (this.isSetupCompleteAndPieceNotSelected()) {
+        if (isSetupCompleteAndPieceNotSelected()) {
 
-            this.pieceSelectionStage(row, col);
+            pieceSelectionStage(row, col);
         }
-        this.setupStage(row, col);
-        this.checkIfMoveFailed();
-        this.checkIfMoveWasSuccessful();
-        this.printInfoToConsole();
-        if(this.checkIfGameIsOver() && this.isGameSetupStageComplete) {
-            this.gameOverMessage();
+        setupStage(row, col);
+        checkIfMoveFailed();
+        checkIfMoveWasSuccessful();
+        printInfoToConsole();
+        if(checkIfGameIsOver() && this.isGameSetupStageComplete) {
+            gameOverMessage();
             System.exit(1);
         }
-
     }
 
     @Override
@@ -119,33 +112,74 @@ public class Render extends JFrame implements MouseListener {
 
     }
 
+    /**
+     * Returns the location in a usable form.
+     * @param coordinates
+     * @return
+     */
     private int getLocationBasedOnCoordinates(int coordinates) {
 
         return coordinates / 100;
     }
 
+    private void increaseRoundCounter() {
+
+        if(this.isGameSetupStageComplete) {
+
+            getGameBoard().roundCounter++;
+        }
+    }
+
     private boolean isGameSetupOver() {
 
-         return this.getGameBoard().getPlayerA().getPlayerPieceCollection().size() == 0 &&
-                this.getGameBoard().getPlayerB().getPlayerPieceCollection().size() == 0;
+         return getGameBoard().getPlayerA().getPlayerPieceCollection().size() == 0 &&
+                getGameBoard().getPlayerB().getPlayerPieceCollection().size() == 0;
     }
 
     private boolean isSetupCompleteAndPieceSelected() {
 
-        return this.isGameSetupOver() && this.isPieceSelected();
+        return isGameSetupOver() && isPieceSelected();
+    }
+
+    private void checkIfPlayerHasNoPieces() {
+
+        if(getGameBoard().isGameOver() && isGameSetupOver()) {
+           setGameOver(true);
+        }
+    }
+
+    private boolean checkIfGameIsOver() {
+
+        checkIfPlayerHasNoPieces();
+        return this.isGameOver;
+    }
+
+    private void checkIfMoveWasSuccessful() {
+
+        if(isWasMoveSuccessful()) {
+            getGameBoard().switchPlayerOnTurn();
+            setWasMoveSuccessful(false);
+        }
+    }
+
+    private void checkIfMoveFailed() {
+
+        if(isDidMoveFail()) {
+
+            setDidMoveFail(false);
+        }
     }
 
     private boolean doesPlayerWantToAttackEnemyPiece(int row, int col) {
 
-        return !this.getGameBoard().getPieceCollection()[row][col].getPiecePlayerId().equals(
-                this.getGameBoard().getPlayerOnTurn().getPlayerId());
+        return !getGameBoard().getPieceCollection()[row][col].getPiecePlayerId().equals(
+                getGameBoard().getPlayerOnTurn().getPlayerId());
     }
 
     private boolean doesPlayerWantToHealAPiece(int row, int col) {
 
-        return this.getGameBoard().getSelectedPiece().getRow() == row &&
-                this.getGameBoard().getSelectedPiece().getCol() == col;
-
+        return getGameBoard().getSelectedPiece().getRow() == row &&
+               getGameBoard().getSelectedPiece().getCol() == col;
     }
 
     private boolean doesPlayerWantToBreakObstacle(int row, int col) {
@@ -155,213 +189,228 @@ public class Render extends JFrame implements MouseListener {
 
     private boolean isThereIsAPieceInBox(int row, int col) {
 
-        return this.getGameBoard().isThereAPieceHere(row, col) && !this.isWasMoveSuccessful();
+        return getGameBoard().isThereAPieceHere(row, col) && !isWasMoveSuccessful();
 
     }
 
     private boolean isSetupCompleteAndPieceNotSelected() {
 
-        return this.isGameSetupStageComplete() && !this.isPieceSelected() && !this.isDidMoveFail() && !this.isWasMoveSuccessful();
+        return isGameSetupStageComplete() && !isPieceSelected() && !isDidMoveFail() && !isWasMoveSuccessful();
     }
 
+    /**
+     * Executes a move on the board.
+     * @param row
+     * @param col
+     */
     private void executeMoveOnBoard(int row, int col) {
 
-        this.getGameBoard().executeMove(row, col);
-        this.setPieceSelected(false);
-        this.setWasMoveSuccessful(true);
-        this.repaint();
-    }
+        if(getGameBoard().getSelectedPiece().isMoveInRange(row,col, getGameBoard().getPieceCollection())) {
 
-    private void executeAttackOnBoard(int row, int col) {
+            getGameBoard().executeMove(row, col);
+            setPieceSelected(false);
+            setWasMoveSuccessful(true);
 
-        if (this.getGameBoard().getSelectedPiece().isAttackValid(row, col, this.getGameBoard().getPieceCollection())) {
-            this.getGameBoard().executeAttack(row, col);
-            this.getGameBoard().removeDeadPieces();
-            this.getGameBoard().setSelectedPiece(null);
-            this.setPieceSelected(false);
-            this.setWasMoveSuccessful(true);
         } else {
 
+            new Modal(this, "Invalid move!",
+                    "You are attempting an invalid move, try again", 400, 100);
+            getGameBoard().setSelectedPiece(null);
+            setPieceSelected(false);
+            setWasMoveSuccessful(false);
+            setDidMoveFail(true);
+            getGameBoard().roundCounter--;
+        }
+        repaint();
+    }
+
+    /**
+     * Executes an attack on the board.
+     * @param row
+     * @param col
+     */
+    private void executeAttackOnBoard(int row, int col) {
+
+        if (getGameBoard().getSelectedPiece().isAttackValid(row, col, getGameBoard().getPieceCollection())) {
+            //If attack is valid.
+            getGameBoard().executeAttack(row, col);
+            getGameBoard().removeDeadPieces();
+            getGameBoard().setSelectedPiece(null);
+            setPieceSelected(false);
+            setWasMoveSuccessful(true);
+        } else {
+            //If attack is not valid
             new Modal(this, "Invalid attack!",
                     "You are attempting an invalid attack try again", 400, 100);
-            this.setPieceSelected(false);
-            this.getGameBoard().roundCounter--;
+            setPieceSelected(false);
+            getGameBoard().roundCounter--;
         }
-        this.repaint();
+        repaint();
     }
 
+    /**
+     * Executes healing of a piece.
+     * @param row
+     * @param col
+     */
     private void executeHealOnBoard(int row, int col) {
 
-        this.getGameBoard().executeHeal(row, col);
-        int diceNum = this.getGameBoard().trowDice(1, 100);
+        getGameBoard().executeHeal(row, col);
+        int diceNum = getGameBoard().trowDice(1, 100);
         if(diceNum % 2 != 0) {
 
-            new Modal(this, "Lucky", "Player " + this.getGameBoard()
+            new Modal(this, "Lucky", "Player " + getGameBoard()
                     .getPlayerOnTurn().getPlayerId().toUpperCase() + " got lucky, go again", 400, 100);
-            this.getGameBoard().switchPlayerOnTurn();
+            getGameBoard().switchPlayerOnTurn();
         }
-        this.repaint();
-        this.setWasMoveSuccessful(true);
-        this.setPieceSelected(false);
+        repaint();
+        setWasMoveSuccessful(true);
+        setPieceSelected(false);
     }
 
+    /**
+     * Selects a piece.
+     * @param row
+     * @param col
+     */
     private void selectPiece(int row, int col) {
 
-        this.getGameBoard().setSelectedPiece(this.getGameBoard().getPieceCollection()[row][col]);
-        this.getGameBoard().getSelectedPiece().showAvailableMoves(
-                                        this.getGameBoard().getPieceCollection(),
-                                         this.getGameBoard().getTileCollection());
-        this.getGameBoard().getSelectedPieceTile();
-        this.setPieceSelected(true);
-        this.repaint();
+        getGameBoard().setSelectedPiece(getGameBoard().getPieceCollection()[row][col]);
+        getGameBoard().getSelectedPiece()
+                .showAvailableMoves(getGameBoard().getPieceCollection(), getGameBoard().getTileCollection());
+        getGameBoard().getSelectedPieceTile();
+        setPieceSelected(true);
+        repaint();
     }
 
+    /**
+     * Starts up the game setup round.
+     * @param row
+     * @param col
+     */
     private void gameSetupRound(int row, int col) {
 
-        this.getGameBoard().showAvailableTiles();
-        if(this.getGameBoard().isPlacementOnValidSide(row) && this.getGameBoard().isBoxEmpty(row, col)) {
+        getGameBoard().showAvailableTiles();
+        if(getGameBoard().isPlacementOnValidSide(row) && !getGameBoard().isThereAPieceHere(row, col)) {
 
-            this.getGameBoard().executeInitialPlacementOnBoard(row, col, this.getGameBoard().getPieceCollection());
-            this.repaint();
-            this.getGameBoard().switchPlayerOnTurn();
-            if (this.isGameSetupOver()) {
-                this.setGameSetupStageComplete(true);
-                this.getGameBoard().setAllTilesToNormal();
-
+            getGameBoard().executeInitialPlacementOnBoard(row, col, getGameBoard().getPieceCollection());
+            repaint();
+            getGameBoard().switchPlayerOnTurn();
+            if (isGameSetupOver()) {
+                setGameSetupStageComplete(true);
+                getGameBoard().setAllTilesToNormal();
             }
+
         } else {
             new Modal(this, "Invalid placement",
                     "You can't place a piece here, try again", 400, 100);
-
-        }
-    }
-
-    private void checkIfMoveFailed() {
-
-        if(this.isDidMoveFail()) {
-            this.setDidMoveFail(false);
-
-        }
-    }
-
-    private void checkIfMoveWasSuccessful() {
-
-        if(this.isWasMoveSuccessful()) {
-            this.getGameBoard().switchPlayerOnTurn();
-            this.setWasMoveSuccessful(false);
         }
     }
 
     private void setupStage(int row, int col) {
 
-        if(!this.isGameSetupStageComplete()) {
+        if(!isGameSetupStageComplete()) {
 
-            this.gameSetupRound(row, col);
+            gameSetupRound(row, col);
         }
     }
 
+    /**
+     * Starts up the piece selection stage.
+     * @param row
+     * @param col
+     */
     private void pieceSelectionStage(int row, int col) {
 
-        if(this.getGameBoard().isSelectedPieceValid(row, col, this.getGameBoard().getPieceCollection())) {
-            this.selectPiece(row, col);
+        if(getGameBoard().isSelectedPieceValid(row, col, getGameBoard().getPieceCollection())) {
+           selectPiece(row, col);
         } else {
             new Modal(this, "Wrong piece", "Selected piece is not yours", 400, 100);
         }
     }
 
+    /**
+     * Starts up the piece moving stage.
+     * @param row
+     * @param col
+     */
     private void moveExecutionStage(int row, int col) {
 
-        this.getGameBoard().setAllTilesToNormal();
-        if(!this.isThereIsAPieceInBox(row, col)) {
+        getGameBoard().setAllTilesToNormal();
+        if(!isThereIsAPieceInBox(row, col)) {
 
-            this.executeMoveOnBoard(row, col);
-            this.increaseRoundCounter();
+            executeMoveOnBoard(row, col);
+            increaseRoundCounter();
         }
-        if(this.isThereIsAPieceInBox(row, col)) {
+        if(isThereIsAPieceInBox(row, col)) {
 
             if(doesPlayerWantToBreakObstacle(row, col)) {
 
                 executeAttackOnBoard(row, col);
                 increaseRoundCounter();
 
-            } else if(this.doesPlayerWantToAttackEnemyPiece(row, col)) {
+            } else if(doesPlayerWantToAttackEnemyPiece(row, col)) {
 
-                this.executeAttackOnBoard(row, col);
-                this.increaseRoundCounter();
+                increaseRoundCounter();
+                executeAttackOnBoard(row, col);
             } else {
-                if (this.doesPlayerWantToHealAPiece(row, col)) {
-                    this.executeHealOnBoard(row, col);
-                    this.increaseRoundCounter();
+                if (doesPlayerWantToHealAPiece(row, col)) {
+                    executeHealOnBoard(row, col);
+                    increaseRoundCounter();
                 } else {
 
                     new Modal(this, "Invalid heal", "Invalid healing attempt, try again",400, 100 );
-                    this.setPieceSelected(false);
-                    this.setDidMoveFail(true);
-                    this.repaint();
+                    setPieceSelected(false);
+                    setDidMoveFail(true);
+                    repaint();
                 }
             }
         }
     }
 
-    private void printInfoToConsole() {
-
-        System.out.println("==================================================");
-        System.out.println("Player a points: " + this.getGameBoard().getPlayerA().getPlayerPoints()
-                + "             round: " + this.getGameBoard().getRoundCounter());
-        System.out.println("Player b points: " + this.getGameBoard().getPlayerB().getPlayerPoints());
-        System.out.println("Player " + this.getGameBoard().getPlayerOnTurn().getPlayerId().toUpperCase() + " on turn");
-        System.out.println("==================================================");
-
-        if(!this.isGameSetupOver()) {
-            System.out.println("Game setup stage");
-        }
-
-        if(this.isSetupCompleteAndPieceNotSelected()) {
-            System.out.println("Select piece");
-        }
-        if(this.isSetupCompleteAndPieceSelected()) {
-
-            System.out.println("Piece selected on row: " + this.getGameBoard().getSelectedPiece().getRow()
-                                + " and on col: " + this.getGameBoard().getSelectedPiece().getCol());
-        }
-    }
-
-    private void increaseRoundCounter() {
-
-        if(this.isGameSetupStageComplete) {
-
-            this.getGameBoard().roundCounter++;
-        }
-    }
-
-    private void checkIfPlayerHasNoPieces() {
-
-        if(this.getGameBoard().isGameOver() && this.isGameSetupOver()) {
-            this.setGameOver(true);
-        }
-    }
-
-    private boolean checkIfGameIsOver() {
-
-        this.checkIfPlayerHasNoPieces();
-        return this.isGameOver;
-    }
-
+    /**
+     * Prints the game over message.
+     */
     private void gameOverMessage() {
 
         System.out.println();
-        System.out.println("Game Over!!        rounds player: " + this.getGameBoard()
-                                                                     .getRoundCounter());
-        System.out.println("Game winner is player" + this.getGameBoard().getPlayerWinner()
+        System.out.println("Game Over!!        rounds player: " + getGameBoard()
+                                                                 .getRoundCounter());
+        System.out.println("Game winner is player" + getGameBoard().getPlayerWinner()
                                                      .getPlayerId().toUpperCase());
         System.out.print("Player B's taken pieces: ");
-        this.getGameBoard().getPlayerA().getPlayerDeadPieces().forEach(e -> System.out.print(e.getPieceId() + " "));
+        getGameBoard().getPlayerA().getPlayerDeadPieces().forEach(e -> System.out.print(e.getPieceId() + " "));
         System.out.println();
         System.out.print("Player A's taken pieces: ");
-        this.getGameBoard().getPlayerB().getPlayerDeadPieces().forEach(e -> System.out.print(e.getPieceId() + " "));
-        System.out.println("Player A's points: " + this.getGameBoard().getPlayerA().getPlayerPoints());
         System.out.println();
-        System.out.println("Player B's points: " + this.getGameBoard().getPlayerB().getPlayerPoints());
+        getGameBoard().getPlayerB().getPlayerDeadPieces().forEach(e -> System.out.print(e.getPieceId() + " "));
+        System.out.println("Player A's points: " + getGameBoard().getPlayerA().getPlayerPoints());
+        System.out.println("Player B's points: " + getGameBoard().getPlayerB().getPlayerPoints());
+    }
 
+    /**
+     * Prints info for game state at every round.
+     */
+    private void printInfoToConsole() {
+
+        System.out.println("==================================================");
+        System.out.println("Player a points: " + getGameBoard().getPlayerA().getPlayerPoints()
+                + "             round: " + getGameBoard().getRoundCounter());
+        System.out.println("Player b points: " + getGameBoard().getPlayerB().getPlayerPoints());
+        System.out.println("Player " + getGameBoard().getPlayerOnTurn().getPlayerId().toUpperCase() + " on turn");
+        System.out.println("==================================================");
+
+        if(!isGameSetupOver()) {
+            System.out.println("Game setup stage");
+        }
+
+        if(isSetupCompleteAndPieceNotSelected()) {
+            System.out.println("Select piece");
+        }
+        if(isSetupCompleteAndPieceSelected()) {
+
+            System.out.println("Piece selected on row: " + getGameBoard().getSelectedPiece().getRow()
+                    + " and on col: " + getGameBoard().getSelectedPiece().getCol());
+        }
     }
 }

@@ -1,20 +1,16 @@
 package pieces;
 
-import tiles.Tile;
-
 import java.awt.*;
 
 public class Knight extends Piece{
 
     public Knight() {
 
-        this.setPieceId("knight");
-        this.setAttackPoints(8);
-        this.setDefensePoints(3);
-        this.setHealthPoints(15);
+        setPieceId("knight");
+        setAttackPoints(8);
+        setDefensePoints(3);
+        setHealthPoints(15);
     }
-
-
 
     @Override
     public void renderPiece(Graphics g) {
@@ -37,8 +33,8 @@ public class Knight extends Piece{
     @Override
     public boolean isMoveInRange(int newRow, int newCol, Piece[][] pieceCollection) {
 
-        int rowCoefficient = Math.abs(newRow - this.getRow());
-        int colCoefficient = Math.abs(newCol - this.getCol());
+        int rowCoefficient = Math.abs(newRow - getRow());
+        int colCoefficient = Math.abs(newCol - getCol());
 
         return (rowCoefficient == 1 && colCoefficient == 0) ||
                 (rowCoefficient == 0 && colCoefficient == 1);
@@ -47,8 +43,8 @@ public class Knight extends Piece{
     @Override
     public boolean isAttackValid(int attackRow, int attackCol, Piece[][] pieceCollection) {
 
-        int rowCoefficient = Math.abs(attackRow - this.getRow());
-        int colCoefficient = Math.abs(attackCol - this.getCol());
+        int rowCoefficient = Math.abs(attackRow - getRow());
+        int colCoefficient = Math.abs(attackCol - getCol());
 
         return (rowCoefficient == 1 && colCoefficient == 0) ||
                 (rowCoefficient == 0 && colCoefficient == 1);
