@@ -148,6 +148,11 @@ public class Render extends JFrame implements MouseListener {
 
     }
 
+    private boolean doesPlayerWantToBreakObstacle(int row, int col) {
+
+        return getGameBoard().getPieceCollection()[row][col].getPieceId().equals("obstacle");
+    }
+
     private boolean isThereIsAPieceInBox(int row, int col) {
 
         return this.getGameBoard().isThereAPieceHere(row, col) && !this.isWasMoveSuccessful();
@@ -274,7 +279,12 @@ public class Render extends JFrame implements MouseListener {
         }
         if(this.isThereIsAPieceInBox(row, col)) {
 
-            if(this.doesPlayerWantToAttackEnemyPiece(row, col)) {
+            if(doesPlayerWantToBreakObstacle(row, col)) {
+
+                executeAttackOnBoard(row, col);
+                increaseRoundCounter();
+
+            } else if(this.doesPlayerWantToAttackEnemyPiece(row, col)) {
 
                 this.executeAttackOnBoard(row, col);
                 this.increaseRoundCounter();

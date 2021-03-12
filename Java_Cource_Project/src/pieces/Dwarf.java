@@ -1,7 +1,5 @@
 package pieces;
 
-import tiles.Tile;
-
 import java.awt.*;
 
 public class Dwarf extends  Piece{
@@ -40,6 +38,7 @@ public class Dwarf extends  Piece{
         boolean isMovingStraight = rowCoefficient <= 2 && colCoefficient == 0 ||
                 colCoefficient <= 2 && rowCoefficient == 0;
         boolean isMovingGLike = rowCoefficient <= 1 && colCoefficient <= 1;
+        
         return (isMovingStraight || isMovingGLike);
     }
 
@@ -49,10 +48,8 @@ public class Dwarf extends  Piece{
         int rowCoefficient = Math.abs(newRow - this.getRow());
         int colCoefficient = Math.abs(newCol - this.getCol());
 
-        boolean isAttackingStraight = rowCoefficient == 2 && colCoefficient == 0 ||
+        return rowCoefficient == 2 && colCoefficient == 0 ||
                 colCoefficient == 2 && rowCoefficient == 0;
-
-        return isAttackingStraight;
     }
 }
 
