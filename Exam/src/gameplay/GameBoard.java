@@ -7,7 +7,7 @@ import tiles.Tile;
 
 public class GameBoard {
 
-    public int GAME_BOARD_SIDE_SIZE = 12;
+    public int GAME_BOARD_SIDE_SIZE = 10;
     private Player playerA;
     private Player playerB;
     private Player playerOnTurn;
@@ -38,13 +38,36 @@ public class GameBoard {
         return pieceCollection;
     }
 
+
+
+    public void setPlayerA(Player playerA) {
+        this.playerA = playerA;
+    }
+
+    public void setPlayerB(Player playerB) {
+        this.playerB = playerB;
+    }
+
+    public void setPlayerOnTurn(Player playerOnTurn) {
+        this.playerOnTurn = playerOnTurn;
+    }
+
+    public void setTileCollection(Tile[][] tileCollection) {
+        this.tileCollection = tileCollection;
+    }
+
+    public void setPieceCollection(Piece[][] pieceCollection) {
+        this.pieceCollection = pieceCollection;
+    }
+
     public GameBoard() {
 
-        this.playerA = new Player();
-        this.playerB = new Player();
+        this.playerA = new Player("a");
+        this.playerB = new Player("b");
         this.tileCollection = new Tile[GAME_BOARD_SIDE_SIZE][GAME_BOARD_SIDE_SIZE];
         this.pieceCollection = new Piece[GAME_BOARD_SIDE_SIZE][GAME_BOARD_SIDE_SIZE];
         fillUpTileCollection();
+        this.setPlayerOnTurn(getPlayerA());
 
     }
 
@@ -65,6 +88,21 @@ public class GameBoard {
                 }
             }
             counter++;
+        }
+    }
+
+    public int trowDice(int min, int max) {
+
+        return (int) (Math.random() * max) + min;
+    }
+
+    public void switchPlayerOnTurn() {
+
+        if(getPlayerOnTurn().getPlayerId().equals("a")) {
+           setPlayerOnTurn(getPlayerB());
+        }else {
+
+            setPlayerOnTurn(getPlayerA());
         }
     }
 }
