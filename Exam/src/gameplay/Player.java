@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Player {
 
     private String playerId;
-    private int magicEnergy;
+    public int magicEnergy;
     private ArrayList<Piece> playerPieceDeck;
     private ArrayList<Piece> playerHand;
 
@@ -17,6 +17,14 @@ public class Player {
         this.playerPieceDeck = new ArrayList<>();
         this.playerHand = new ArrayList<>();
         fillUpPlayerPieceDeck();
+    }
+
+    public ArrayList<Piece> getPlayerHand() {
+        return playerHand;
+    }
+
+    public void setPlayerHand(ArrayList<Piece> playerHand) {
+        this.playerHand = playerHand;
     }
 
     public String getPlayerId() {

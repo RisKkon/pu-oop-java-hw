@@ -41,6 +41,12 @@ public abstract class Piece {
         return pieceId;
     }
 
+    public void addAttackPoints(int points) { this.attackPoints += points; }
+
+    public void removeAttackPoints(int points) { this.attackPoints -= points; }
+
+    public void addDefencePoints(int points) { this.defencePoints += points; }
+
     public void setPieceId(String pieceId) {
         this.pieceId = pieceId;
     }

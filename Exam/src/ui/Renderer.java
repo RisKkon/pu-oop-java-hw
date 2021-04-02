@@ -5,13 +5,21 @@ import pieces.Piece;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class Renderer extends JFrame implements MouseListener {
+public class Renderer extends JFrame implements MouseListener, ActionListener {
 
     GameBoard gameBoard;
     private boolean isGameSetupComplete;
+    private boolean isMonsterPlaced;
+    private boolean isSpellActivated;
+    private JButton yesButton;
+    private JButton noButton;
+    private boolean doesPlayerWantToActivateSpell;
+
 
 
     public Renderer(GameBoard gameBoard) {
@@ -22,6 +30,7 @@ public class Renderer extends JFrame implements MouseListener {
         this.addMouseListener(this);
         this.setVisible(true);
         this.isGameSetupComplete = false;
+        this.doesPlayerWantToActivateSpell = false;
     }
 
 
@@ -42,7 +51,15 @@ public class Renderer extends JFrame implements MouseListener {
         if(!isGameSetupStageComplete()) {
 
             placePiece(row, col);
+            getGameBoard().switchPlayerOnTurn();
+
         }
+        if(!isInitialTurnStepsCompleted() && isGameSetupStageComplete()) {
+
+            executeInitialStep(row, col);
+
+        }
+
 
 
     }
@@ -119,7 +136,7 @@ public class Renderer extends JFrame implements MouseListener {
 
         if(isInitialPlacementValid(row, col)) {
 
-            int pieceIndex = getGameBoard().trowDice(0, 18);
+            int pieceIndex = getGameBoard().trowDice(0, getGameBoard().getPlayerOnTurn().getPlayerPieceDeck().size());
             Piece pieceToPlace = getGameBoard().getPlayerOnTurn().getPlayerPieceDeck()
                     .get(pieceIndex);
             getGameBoard().getPieceCollection()[row][col] = pieceToPlace;
@@ -128,7 +145,8 @@ public class Renderer extends JFrame implements MouseListener {
             getGameBoard().getPieceCollection()[row][col]
                     .setPiecePlayerId(getGameBoard().getPlayerOnTurn().getPlayerId());
             repaint();
-            getGameBoard().switchPlayerOnTurn();
+            getGameBoard().getPlayerOnTurn().getPlayerPieceDeck().remove(pieceIndex);
+
         }
     }
 
@@ -147,6 +165,61 @@ public class Renderer extends JFrame implements MouseListener {
         return row >= 8;
     }
 
+    private boolean isInitialTurnStepsCompleted() {
 
+        return this.isMonsterPlaced && this.isSpellActivated;
+    }
+
+    private void executeInitialStep(int row, int col) {
+
+        if(!this.isMonsterPlaced) {
+
+            placePiece(row, col);
+        }
+
+        if(this.isMonsterPlaced && !this.isSpellActivated) {
+
+            activateSpellWindow();
+            getGameBoard().activateSpell(row, col);
+        }
+    }
+
+    private void activateSpellWindow() {
+
+
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setSize(500, 120);
+        frame.setLayout(null);
+        frame.setLocationRelativeTo(null);
+        frame.setTitle("Activate spell?");
+
+        this.yesButton = new JButton("Yes");
+        this.yesButton.setSize(100, 50);
+        this.yesButton.setLocation(10, 10);
+        this.yesButton.addActionListener(this);
+        this.noButton = new JButton("No");
+        this.noButton.setSize(100, 50);
+        this.noButton.setLocation(370, 10);
+        this.noButton.addActionListener(this);
+
+        frame.add(yesButton);
+        frame.add(noButton);
+
+        frame.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if(e.getSource() == this.yesButton) {
+
+            this.doesPlayerWantToActivateSpell = true;
+
+        } else {
+
+            getGameBoard().getPlayerOnTurn().magicEnergy += 10;
+        }
+    }
 }
 

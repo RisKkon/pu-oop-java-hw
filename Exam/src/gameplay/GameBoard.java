@@ -105,4 +105,22 @@ public class GameBoard {
             setPlayerOnTurn(getPlayerA());
         }
     }
+
+    public void activateSpell(int row, int col) {
+
+        int spellIndex = trowDice(0, 2);
+        switch(spellIndex) {
+
+            case 0: {
+
+                getPieceCollection()[row][col].addDefencePoints(3);
+                break;
+            }
+            case 1: {
+                getPieceCollection()[row][col].addAttackPoints(3);
+                break;
+            }
+        }
+    }
+
 }
